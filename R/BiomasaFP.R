@@ -15,6 +15,8 @@
 #' 
 #'  
 #' @export
+#' 
+#' added line to test, Tim needs to add more text
 
 mergefp <- function (a,b,d) {
  
