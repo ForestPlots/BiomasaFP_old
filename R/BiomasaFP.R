@@ -15,12 +15,13 @@
 #' 
 #'  
 #' @export
-#' 
-#' added line to test, Tim needs to add more text
+
+
+
 
 mergefp <- function (a,b,d) {
  
-        #1 read datasets
+        #1 read datasets (Tim can add comments)
         
         if(is.data.frame(a)){
                 CD<-a
@@ -85,7 +86,7 @@ mergefp <- function (a,b,d) {
         datasetb        
         }
 #Function to tidy census information - This function is not visible to users. After reading data downloaded from the Advanced Search in ForestPlots.net, merged with WD and PlotMetadata
-#
+
         CleaningCensusInfo <- function (dfmerged) {
         
         dfm <- dfmerged        
