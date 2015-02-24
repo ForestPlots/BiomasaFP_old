@@ -3,7 +3,7 @@ Type: Package
 Title: Tools for analysing data downloaded from ForestPlots.net
 Version: 1.0
 Date: 2014-12-03
-Author: Gabriela Lopez-Gonzalez, Martin Sullivan
+Author: Gabriela Lopez-Gonzalez, Martin Sullivan, Tim Baker
 Maintainer: Gabriela Lopez-Gonzalez <admin@forestplots.net>
 Description: Tools for analysing data downloaded from ForestPlots.net. This
     package includes functions for: a) estimating above ground biomass (AGB)
