@@ -1,6 +1,6 @@
-#' @title Function to estimate individual biomass for dry forests (Chave, 2005).
-#' @description Function to estimate individual biomass using Chave (2005) equation for dry forests. Height is estimated using Feldpaush (2011) regional parameters with Weibull equation. The function adds columns to the dataset with the biomass information for all alive trees. This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD) and Allometric RegionID.The function assumes that the diameter used is DBH4, unless other DBH is selected. See ForestPlots.net documentation for more information.
-#' @references Chave C, Andalo S, Brown, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
+#' @title Function to estimate tree biomass for dry forests based on Chave et al. (2005)
+#' @description Function to estimate individual tree aboveground biomass using Chave et al. (2005) equation for dry forests. Tree height is estimated from diameter using a Weibull equation with region-specific parameters from Feldpaush et al. (2011). The function adds columns to the dataset that contain the biomass estimates for all living trees. This function needs a dataset with the following columns: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD) and Allometric RegionID.The function assumes that the diameter that should be used is DBH4, unless another DBH is selected. See ForestPlots.net documentation for more information.
+#' @references Chave J, Andalo C, Brown S, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
 #' 
 #' Feldpausch TR, Banin L, Phillips OL, Baker TR, Lewis SL et al. 2011. Height-diameter allometry of tropical forest trees. Biogeosciences 8 (5):1081-1106. doi:10.5194/bg-8-1081-2011.
 #' 
@@ -8,7 +8,7 @@
 #' 
 #' Zanne AE, Lopez-Gonzalez G, Coomes DA et al. 2009. Data from: Towards a worldwide wood economics spectrum. Dryad Digital Repository. http://dx.doi.org/10.5061/dryad.234
 
-#' @param xdataset a dataset for estimating biomass
+#' @param xdataset a dataset for estimating individual tree biomass
 #' @param dbh a diameter (in mm). 
 #' 
 #' @export
@@ -16,7 +16,7 @@
 
 AGBChv05DH <- function (xdataset, dbh = "DBH4"){
         cdf <- xdataset
-        ## Clean file 
+        ## Clean file
         cdf <- CleaningCensusInfo(xdataset) 
         # Get Weibull Parameters
         data(WeibullHeightParameters)

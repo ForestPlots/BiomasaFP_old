@@ -1,10 +1,10 @@
 #' @title Function to estimate AGB change between first and last census (by PlotViewID).
-#' @description This function produces a biomass change output between first and last census by PlotViewID. AGB is estimated by providing a biomass equation from the ones included in the package.
-#' @param xdataset a dataset  with diameter (use mergefp)
+#' @description This function estimates biomass change between the first and last census by PlotViewID. AGB is estimated by providing a biomass equation from the ones included in the package.
+#' @param xdataset a dataset with diameter (use mergefp)
 #' @param AGBEquation the AGB equation used to produce the summary
 #' @param dbh a diameter (in mm) to estimate biomass
 #' @author Gabriela Lopez-Gonzalez
-#' @references Chave C, Andalo S, Brown, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
+#' @references Chave J, Andalo C, Brown S, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
 #' 
 #' Chave J, Rejou-Mechain M, Burquez A et al. 2014. Improved allometric models to estimate the aboveground biomass of tropical trees. Global Change Biology 20: 3177-3190. doi: 10.1111/gcb.12629
 #' 
