@@ -2,23 +2,23 @@
 % Please edit documentation in R/AGBChave2005DryHeight.R
 \name{AGBChv05DH}
 \alias{AGBChv05DH}
-\title{Function to estimate individual biomass for dry forests (Chave, 2005).}
+\title{Function to estimate tree biomass for dry forests based on Chave et al. (2005)}
 \usage{
 AGBChv05DH(xdataset, dbh = "DBH4")
 }
 \arguments{
-\item{xdataset}{a dataset for estimating biomass}
+\item{xdataset}{a dataset for estimating individual tree biomass}
 
 \item{dbh}{a diameter (in mm).}
 }
 \description{
-Function to estimate individual biomass using Chave (2005) equation for dry forests. Height is estimated using Feldpaush (2011) regional parameters with Weibull equation. The function adds columns to the dataset with the biomass information for all alive trees. This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD) and Allometric RegionID.The function assumes that the diameter used is DBH4, unless other DBH is selected. See ForestPlots.net documentation for more information.
+Function to estimate individual tree aboveground biomass using Chave et al. (2005) equation for dry forests. Tree height is estimated from diameter using a Weibull equation with region-specific parameters from Feldpaush et al. (2011). The function adds columns to the dataset that contain the biomass estimates for all living trees. This function needs a dataset with the following columns: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD) and Allometric RegionID.The function assumes that the diameter that should be used is DBH4, unless another DBH is selected. See ForestPlots.net documentation for more information.
 }
 \author{
 Gabriela Lopez-Gonzalez
 }
 \references{
-Chave C, Andalo S, Brown, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
+Chave J, Andalo C, Brown S, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
 
 Feldpausch TR, Banin L, Phillips OL, Baker TR, Lewis SL et al. 2011. Height-diameter allometry of tropical forest trees. Biogeosciences 8 (5):1081-1106. doi:10.5194/bg-8-1081-2011.
 

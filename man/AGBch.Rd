@@ -7,20 +7,20 @@
 AGBch(xdataset, AGBEquation, dbh = "DBH4")
 }
 \arguments{
-\item{xdataset}{a dataset  with diameter (use mergefp)}
+\item{xdataset}{a dataset with diameter (use mergefp)}
 
 \item{AGBEquation}{the AGB equation used to produce the summary}
 
 \item{dbh}{a diameter (in mm) to estimate biomass}
 }
 \description{
-This function produces a biomass change output between first and last census by PlotViewID. AGB is estimated by providing a biomass equation from the ones included in the package.
+This function estimates biomass change between the first and last census by PlotViewID. AGB is estimated by providing a biomass equation from the ones included in the package.
 }
 \author{
 Gabriela Lopez-Gonzalez
 }
 \references{
-Chave C, Andalo S, Brown, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
+Chave J, Andalo C, Brown S, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
 
 Chave J, Rejou-Mechain M, Burquez A et al. 2014. Improved allometric models to estimate the aboveground biomass of tropical trees. Global Change Biology 20: 3177-3190. doi: 10.1111/gcb.12629
 

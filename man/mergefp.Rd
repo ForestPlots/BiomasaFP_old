@@ -7,9 +7,9 @@
 mergefp(a, b, d)
 }
 \arguments{
-\item{a}{an individual's data file from "Advanced Search"}
+\item{a}{an individual tree data file downloaded from the "Advanced Search"}
 
-\item{b}{a metadata file dowloaded from the "Query Library"}
+\item{b}{a metadata file downloaded from the "Query Library"}
 
 \item{c}{a wood density file, with the wood density for each individual tree by PlotViewID downloaded from the "Query Library"}
 }

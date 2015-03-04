@@ -2,7 +2,7 @@
 % Please edit documentation in R/AGBChave2005Moist.R
 \name{AGBChv05M}
 \alias{AGBChv05M}
-\title{Estimates biomass of individual tree records.}
+\title{Estimates biomass of individual trees.}
 \usage{
 AGBChv05M(xdataset, dbh = "DBH4")
 }
@@ -18,7 +18,7 @@ Estimates individual biomass using Chave equation (2005) without height for Mois
 Gabriela Lopez-Gonzalez
 }
 \references{
-Chave C, Andalo S, Brown, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
+Chave J, Andalo C, Brown S, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
 
 Chave J, Coomes DA, Jansen S, Lewis SL, Swenson NG, Zanne AE. 2009. Towards a worldwide wood economics spectrum. Ecology Letters 12(4): 351-366. http://dx.doi.org/10.1111/j.1461-0248.2009.01285.x
 

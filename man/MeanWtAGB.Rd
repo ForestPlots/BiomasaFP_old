@@ -2,7 +2,7 @@
 % Please edit documentation in R/AGBSummaryWeightedMean.R
 \name{MeanWtAGB}
 \alias{MeanWtAGB}
-\title{Function to estimate mean weighted AGB.}
+\title{Function to estimate mean AGB per plot, weighted by census interval length}
 \usage{
 MeanWtAGB(xdataset, AGBEquation, dbh = "DBH4")
 }

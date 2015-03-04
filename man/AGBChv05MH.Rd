@@ -2,7 +2,7 @@
 % Please edit documentation in R/AGBChave2005MoistHeight.R
 \name{AGBChv05MH}
 \alias{AGBChv05MH}
-\title{Function to estimate individual biomass for moist forests (Chave, 2005).}
+\title{Function to estimate individual tree biomass for moist forests}
 \usage{
 AGBChv05MH(xdataset, dbh = "DBH4")
 }
@@ -12,10 +12,10 @@ AGBChv05MH(xdataset, dbh = "DBH4")
 \item{dbh}{a diameter (in mm).}
 }
 \description{
-Function to estimate individual biomass using Chave equation (2005) with height for Moist forests. Height is estimated using Feldpaush (2011) regional parameters with Weibull equation. The function adds columns with the biomass information for all alive trees. This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD), Allometric RegionID.The function assumes that the diameter used is DBH4, unless other DBH is selected. See ForestPlots.net documentation for more information.
+Function to estimate individual biomass using the Chave equation (2005) with height for Moist forests. Tree height is estimated using Feldpausch et al. (2011) regional parameters with Weibull equation. The function adds columns with the biomass information for all alive trees. This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD), Allometric RegionID.The function assumes that the diameter used is DBH4, unless other DBH is selected. See ForestPlots.net documentation for more information.
 }
 \references{
-Chave C, Andalo S, Brown, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
+Chave J, Andalo C, Brown S, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
 
 Feldpausch TR, Banin L, Phillips OL, Baker TR, Lewis SL et al. 2011. Height-diameter allometry of tropical forest trees. Biogeosciences 8 (5):1081-1106. doi:10.5194/bg-8-1081-2011.
 
