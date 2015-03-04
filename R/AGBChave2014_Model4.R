@@ -1,6 +1,6 @@
-#' @title Function to estimate individual biomass for forests using a pantropical model (Chave, 2014).
-#' @description Function to estimate individual biomass using Chave (2014)  pantropical model (model 4). 
-#' Height is estimated using Feldpaush (2011) regional parameters with Weibull equation. The function adds columns  to the dataset with the biomass information for all alive trees.
+#' @title Function to estimate individual biomass for forests using a pantropical model (Chave et al. 2014).
+#' @description Function to estimate individual biomass using Chave et al. (2014) pantropical model (model 4). 
+#' Height is estimated using Feldpausch et al. (2011) regional parameters with Weibull equation. The function adds columns  to the dataset with the biomass information for all alive trees.
 #' This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD) and Allometric RegionID.The function assumes that the diameter used is DBH4, unless other DBH is selected.
 #' See ForestPlots.net documentation for more information.
 #' @references 

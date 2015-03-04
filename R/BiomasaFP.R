@@ -3,8 +3,8 @@
 #' @description Function for reading and merging the 3 datasets needed for estimating biomass: Census Data (a), 
 #' Metadata (b), wood density from each individual tree (c). The tree datasets can be donwloaded from ForestPlots.net.
 #' This function can use data frames and as well as file paths as input objects.
-#' @param a an individual's data file from "Advanced Search"
-#' @param b a metadata file dowloaded from the "Query Library"
+#' @param a an individual tree data file downloaded from the "Advanced Search"
+#' @param b a metadata file downloaded from the "Query Library"
 #' @param c a wood density file, with the wood density for each individual tree by PlotViewID downloaded from the "Query Library"
 #' @author Gabriela Lopez-Gonzalez, Martin Sullivan
 #' @references Lopez-Gonzalez G, Lewis SL, Burkitt M. and Phillips OL. 2011. ForestPlots.net: a web application and research tool to manage and analyse tropical forest plot data. Journal of Vegetation Science 22: 610–613. doi: 10.1111/j.1654-1103.2011.01312.x
@@ -12,7 +12,7 @@
 #' Chave J, Coomes DA, Jansen S, Lewis SL, Swenson NG, Zanne AE. 2009. Towards a worldwide wood economics spectrum. Ecology Letters 12(4): 351-366. http://dx.doi.org/10.1111/j.1461-0248.2009.01285.x
 #' 
 #' Zanne AE, Lopez-Gonzalez G, Coomes DA et al. 2009. Data from: Towards a worldwide wood economics spectrum. Dryad Digital Repository. http://dx.doi.org/10.5061/dryad.234
-#' 
+#'
 #'  
 #' @export
 

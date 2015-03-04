@@ -1,4 +1,4 @@
-#' @title Function to estimate mean weighted AGB.
+#' @title Function to estimate mean AGB per plot, weighted by census interval length
 #' @description This function produces a summary of mean weighted AGB by PlotViewID. AGB is estimated by providing an AGB equation from the package. Weighting is by Census Dates.
 #' @param xdataset a dataset  with diameter, wood density and census dates for each individual tree (use mergefp)
 #' @param AGBEquation the AGB equation used to produce the summary
