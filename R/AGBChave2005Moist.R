@@ -1,4 +1,4 @@
-#' @title Estimates biomass of individual trees.
+#' @title Estimates biomass of individual trees.Uses diameter and wood density to estimate biomass.
 #' @description Estimates individual biomass using Chave equation (2005) without height for Moist forests. The function adds columns with the biomass information for all alive trees. This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD).The function assumes that the diameter used is DBH4, unless other DBH is selected. See ForestPlots.net documentation for more information.
 #' @param xdataset a dataset for estimating biomass
 #' @param dbh a diameter (in mm). 
@@ -18,7 +18,7 @@ AGBChv05M <- function (xdataset, dbh = "DBH4"){
         #dbh_d <- paste(dbh,"_D", sep="") 
         
         cdf$AGBind <- ifelse(cdf$DBH1>0,cdf$WD * exp (-1.499 + (2.148*log(cdf[,dbh]/10))+ (0.207*(log(cdf[,dbh]/10))^2)- (0.0281*(log(cdf[,dbh]/10))^3))/1000, NA)
-        cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
+        #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #The code below was removed as it is difficult to find recruits with the current download format
         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)
         #The code below was removed and would be implemented later

@@ -21,7 +21,7 @@ AGBChv05W <- function (xdataset, dbh = "DBH4"){
         
         cdf$AGBind <- ifelse(cdf$DBH1>0,
                              cdf$WD * exp (-1.239 + (1.980*log(cdf[,dbh]/10))+ (0.207*(log(cdf[,dbh]/10))^2)- (0.0281*(log(cdf[,dbh]/10))^3))/1000, NA)
-        cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
+        #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #The code below was removed as it is difficult to find recruits with the current download format
         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)
         #The code below was removed and would be implemented later
