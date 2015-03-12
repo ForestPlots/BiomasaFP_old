@@ -48,11 +48,11 @@ Una vez que haya obtenido el conjunto de datos resultante de la fusión usando `
 - El numero de especies e individuos en cada familia (`SummaryFamilies`).
 - Biomasa Total en cada censo (`SummaryAGB`).
 - Cambio en AGB entre el primer y el ultimo censo (`AGBch`) .
-- Biomasa(AGB) promedio ponderada por intervalos de censo (`MeanWtAGB`).
+
 
 Estas funciones devuelven tramas de datos indexados por vista de la parcela (y el numero de censo, cuando se calculan los resumenes estadisticos para cada censo).
 
-Las tres funciones que calculan los resumenes estadisticos de biomasa (`SummaryAGB`, `AGBch` y `MeanWtAGB`) requieren  de una ecuacion para estimar el AGB. Siete ecuaciones alometricas se incluyen en *BiomasaFP*; seis ecuaciones de Chave et al. 2005 (`AGBChv05DH`, `AGBChv05M` , `AGBChv05MH`, `AGBChv05W`  `AGBChv05WH`) y  el modelo pantropical reportado en Chave et al. (2014; modelo 4, 'AGBChv14') . Cuando se utiliza la altura del arbol en una ecuacion, esta se estima utilizando los parametros regionales para un modelo de Weibull (Feldpaush et al., 2011).
+Las tres funciones que calculan los resumenes estadisticos de biomasa (`SummaryAGB`, `AGBch` y `LastAGB`) requieren  de una ecuacion para estimar el AGB. Siete ecuaciones alometricas se incluyen en *BiomasaFP*; seis ecuaciones de Chave et al. 2005 (`AGBChv05DH`, `AGBChv05M` , `AGBChv05MH`, `AGBChv05W`  `AGBChv05WH`) y  el modelo pantropical reportado en Chave et al. (2014; modelo 4, 'AGBChv14') . Cuando se utiliza la altura del arbol en una ecuacion, esta se estima utilizando los parametros regionales para un modelo de Weibull (Feldpaush et al., 2011).
 
 
 ```
@@ -69,11 +69,11 @@ Por defecto, estas tres funciones utilizan DBH4 para el diametro de los arboles,
 
 ```
 #Por defecto , utiliza DBH4
-AGB.mean<-MeanWtAGB(mergedCensus,AGBChv05M)
-head(AGB.mean)
+AGB.Last<-LastAGB(mergedCensus,AGBChv05M)
+head(AGB.Last)
 #Utilizando DBH3
-AGB.mean.dbh3<-MeanWtAGB(mergedCensus,AGBChv05M,"DBH3")
-head(AGB.mean.dbh3)
+AGB.Last.dbh3<LastAGB(mergedCensus,AGBChv05M,"DBH3")
+head(AGB.Last.dbh3)
 ```
 ----
 **Estimacion de biomasa a nivel de arbol**
