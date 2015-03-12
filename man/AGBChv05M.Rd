@@ -2,7 +2,7 @@
 % Please edit documentation in R/AGBChave2005Moist.R
 \name{AGBChv05M}
 \alias{AGBChv05M}
-\title{Estimates biomass of individual trees.}
+\title{Estimates biomass of individual trees.Uses diameter and wood density to estimate biomass.}
 \usage{
 AGBChv05M(xdataset, dbh = "DBH4")
 }

@@ -14,7 +14,8 @@ AGBch(xdataset, AGBEquation, dbh = "DBH4")
 \item{dbh}{a diameter (in mm) to estimate biomass}
 }
 \description{
-This function estimates biomass change between the first and last census by PlotViewID. AGB is estimated by providing a biomass equation from the ones included in the package.
+This function estimates biomass change between the first and last census by time elapsed. AGB is estimated by providing a biomass equation from the ones included in the package.
+Results are displayed by PlotViewID.
 }
 \author{
 Gabriela Lopez-Gonzalez

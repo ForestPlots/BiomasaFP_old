@@ -20,7 +20,7 @@
 SummaryAGB <- function (xdataset, AGBEquation, dbh ="DBH4"){
         AGBData <- AGBEquation (xdataset, dbh) 
         IndAL <- aggregate (Alive/PlotArea ~ PlotViewID + Census.No,  data = AGBData, FUN=sum )
-        AGBAlive <-aggregate (AGBAl/PlotArea ~ CountryName + PlotViewID + PlotCode +PlotArea+ LatitudeDecimal + LongitudeDecimal+Census.No + Census.Mean.Date, data = AGBData, FUN=sum )
+        AGBAlive <-aggregate (AGBind/PlotArea ~ CountryName + PlotViewID + PlotCode +PlotArea+ LatitudeDecimal + LongitudeDecimal+Census.No + Census.Mean.Date, data = AGBData, FUN=sum )
         mergeAGBAlive <- merge (AGBAlive, IndAL, by = c('PlotViewID','Census.No'))
         #Exclude dead trees for the time being until new release
         SummaryB<-mergeAGBAlive
