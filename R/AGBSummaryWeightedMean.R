@@ -1,5 +1,5 @@
-#' @title Function to estimate last census AGB per plot.
-#' @description This function produces a summary of last AGB by PlotViewID. AGB is estimated by providing an AGB equation from the package. 
+#' @title Function to estimate mean AGB per plot, weighted by census interval length
+#' @description This function produces a summary of mean weighted AGB by PlotViewID. AGB is estimated by providing an AGB equation from the package. Weighting is by Census Dates.
 #' @param xdataset a dataset  with diameter, wood density and census dates for each individual tree (use mergefp)
 #' @param AGBEquation the AGB equation used to produce the summary
 #' @param dbh a diameter (in mm) to estimate biomass
@@ -18,34 +18,31 @@
 #' 
 #' @export
 
-LastAGB <- function (xdataset, AGBEquation, dbh ="DBH4"){
-        # function format change equation for equation, and populate information AGBData <- AGBEquation (mergedCensus, dbh4) 
-        AGBData <- AGBEquation (xdataset, dbh)
-        
-        AGBAlive <-aggregate (cbind(AGBind,  Alive, AGBind/PlotArea) ~ PlotCode + PlotViewID + PlotArea+ Census.No + Census.Mean.Date +LatitudeDecimal + LongitudeDecimal, data = AGBData, FUN=sum )
-        #toimplement once differnce between survivors and recruits is implemented
-        #AGBAlive <-aggregate (cbind(AGBAl,  Alive, AGBAl/PlotArea) ~ PlotCode + PlotViewID + PlotArea+ Census.No + Census.Mean.Date +LatitudeDecimal + LongitudeDecimal, data = AGBData, FUN=sum )
+MeanWtAGB <- function (xdataset, AGBEquation, dbh ="DBH4"){
+        AGBData <- AGBEquation (xdataset, dbh) 
+        AGBAlive <-aggregate (cbind(AGBAl,  Alive, AGBAl/PlotArea) ~ PlotCode + PlotViewID + PlotArea+ Census.No + Census.Mean.Date +LatitudeDecimal + LongitudeDecimal, data = AGBData, FUN=sum )
         SummaryB<-AGBAlive
         SummaryB <- SummaryB[order(SummaryB$PlotViewID, SummaryB$Census.No, decreasing=FALSE), ]
+        #SummaryB
+        # Code for weighted mean
+        results <- lapply (split (SummaryB, SummaryB$PlotViewID), function (X) weighted.mean (X$V3, X$Census.Mean.Date))
+
         
+        resultsvector2 <-  stack(results)
+        colnames (resultsvector2) <- c('AGBWeightedMean', 'PlotViewID')
         #SUmmary PlotViewID first and last census
-        
+       
         fc<-SummaryB[SummaryB$Census.No==1,]
         maxCensusNo <-aggregate(Census.No ~ PlotViewID, data = SummaryB, max)
         lc<- merge(SummaryB, maxCensusNo, by = c('PlotViewID', 'Census.No'))
-        
-        #head (lc)
-        
-        lcs <- lc[,c('Census.No','Census.Mean.Date','PlotViewID','V3')]
-        colnames(lcs) <- c('LastCensus.No','Last.Census.Mean.Date', 'PlotViewID','AGB')
-        #head(lcs)
+        lcs <- lc[,c('Census.No','Census.Mean.Date','PlotViewID')]
+        colnames(lcs) <- c('LastCensus.No','Last.Census.Mean.Date', 'PlotViewID')
         
         fandl<-merge(fc, lcs, by= 'PlotViewID')
-        #head (fandl)
-        #head(wtm)
-        AGBLastCensus <-fandl[,c('PlotViewID','PlotCode', 'PlotArea', 'LatitudeDecimal', 'LongitudeDecimal', 'Last.Census.Mean.Date', 'LastCensus.No', 'AGB')]
-        AGBLastCensus
-        
+        wtm <-merge(fandl, resultsvector2, by ='PlotViewID')
+        wtma <-wtm[,c('PlotViewID','PlotCode', 'PlotArea', 'LatitudeDecimal', 'LongitudeDecimal','Census.Mean.Date', 'Last.Census.Mean.Date', 'LastCensus.No', 'AGBWeightedMean')]
+        wtma
+       
         
         
         

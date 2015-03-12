@@ -21,14 +21,14 @@ AGBChv05WH <- function (xdataset, dbh = "DBH4"){
         WHP <- WeibullHeightParameters
         cdf <-merge (cdf, WHP, by = "AllometricRegionID", all.x = TRUE )
         #Estimate height
-        cdf$HtF <- ifelse(cdf$DBH1 > 0 | cdf$Alive == 1, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh]/10)^cdf$c_par)), NA)
+        cdf$Ht <- ifelse(cdf$DBH1 > 0 | cdf$Alive == 1, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh]/10)^cdf$c_par)), NA)
         #Add dead and recruits when codes are improved
         #dbh_d <- paste(dbh,"_D", sep="") 
         #cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$CensusNo, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh_d]/10)^cdf$c_par)), NA)
         
         # Calculate AGB by stem Alive type
         cdf$AGBind <- ifelse(cdf$DBH1>0, 
-                             0.0776 *(cdf$WD * (cdf[,dbh]/10)^2* cdf$HtF)^0.940/1000, 
+                             0.0776 *(cdf$WD * (cdf[,dbh]/10)^2* cdf$Ht)^0.940/1000, 
                              NA)
         cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)

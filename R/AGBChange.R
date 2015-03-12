@@ -1,6 +1,5 @@
 #' @title Function to estimate AGB change between first and last census (by PlotViewID).
-#' @description This function estimates biomass change between the first and last census by time elapsed. AGB is estimated by providing a biomass equation from the ones included in the package.
-#' Results are displayed by PlotViewID.
+#' @description This function estimates biomass change between the first and last census by PlotViewID. AGB is estimated by providing a biomass equation from the ones included in the package.
 #' @param xdataset a dataset with diameter (use mergefp)
 #' @param AGBEquation the AGB equation used to produce the summary
 #' @param dbh a diameter (in mm) to estimate biomass
@@ -19,7 +18,7 @@
 
 AGBch <- function (xdataset, AGBEquation, dbh ="DBH4"){
         AGBData <- AGBEquation (xdataset, dbh) 
-        AGBAlive <-aggregate (cbind(AGBind,  Alive, AGBind/PlotArea) ~ PlotCode + PlotViewID + PlotArea+ Census.No + Census.Mean.Date +LatitudeDecimal + LongitudeDecimal, data = AGBData, FUN=sum )
+        AGBAlive <-aggregate (cbind(AGBAl,  Alive, AGBAl/PlotArea) ~ PlotCode + PlotViewID + PlotArea+ Census.No + Census.Mean.Date +LatitudeDecimal + LongitudeDecimal, data = AGBData, FUN=sum )
         SummaryB<-AGBAlive
         SummaryB <- SummaryB[order(SummaryB$PlotViewID, SummaryB$Census.No, decreasing=FALSE), ]
         #Estimating Change
@@ -32,7 +31,7 @@ AGBch <- function (xdataset, AGBEquation, dbh ="DBH4"){
         
         AGBCh<-merge(fc, lcs, by= 'PlotViewID')
         #AGBCh
-        AGBCh$AGBChange <- (AGBCh$LastAGB_ha - AGBCh$V3)/(AGBCh$Last.Census.Mean.Date-AGBCh$Census.Mean.Date)
+        AGBCh$AGBChange <- AGBCh$LastAGB_ha - AGBCh$V3
         #AGBCh
         AGBCha <- AGBCh[, c('PlotViewID', 'PlotCode','PlotArea', 'LatitudeDecimal','LongitudeDecimal', 'Census.Mean.Date','LastCensus.No','Last.Census.Mean.Date', 'AGBChange')]
         AGBCha

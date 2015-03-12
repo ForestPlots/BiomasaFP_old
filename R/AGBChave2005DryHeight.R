@@ -1,6 +1,5 @@
-#' @title Function to estimate tree biomass for dry forests (Chave et al. 2005).Uses diameter, wood density  and estimated height (Feldpausch et al. 2011) to estimate biomass.
+#' @title Function to estimate tree biomass for dry forests based on Chave et al. (2005)
 #' @description Function to estimate individual tree aboveground biomass using Chave et al. (2005) equation for dry forests. Tree height is estimated from diameter using a Weibull equation with region-specific parameters from Feldpaush et al. (2011). The function adds columns to the dataset that contain the biomass estimates for all living trees. This function needs a dataset with the following columns: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD) and Allometric RegionID.The function assumes that the diameter that should be used is DBH4, unless another DBH is selected. See ForestPlots.net documentation for more information.
-#' 
 #' @references Chave J, Andalo C, Brown S, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
 #' 
 #' Feldpausch TR, Banin L, Phillips OL, Baker TR, Lewis SL et al. 2011. Height-diameter allometry of tropical forest trees. Biogeosciences 8 (5):1081-1106. doi:10.5194/bg-8-1081-2011.
@@ -24,16 +23,16 @@ AGBChv05DH <- function (xdataset, dbh = "DBH4"){
         WHP <- WeibullHeightParameters
         cdf <-merge (cdf, WHP, by = "AllometricRegionID", all.x = TRUE )
         #Estimate height
-        cdf$HtF <- ifelse(cdf$DBH1 > 0 | cdf$Alive == 1, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh]/10)^cdf$c_par)), NA)
+        cdf$Ht <- ifelse(cdf$DBH1 > 0 | cdf$Alive == 1, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh]/10)^cdf$c_par)), NA)
         #Add dead and recruits when codes are improved
         #dbh_d <- paste(dbh,"_D", sep="") 
         #cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$CensusNo, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh_d]/10)^cdf$c_par)), NA)
         
         # Calculate AGB by stem Alive type
         cdf$AGBind <- ifelse(cdf$DBH1>0, 
-                             0.112 *(cdf$WD * (cdf[,dbh]/10)^2* cdf$HtF)^0.916/1000, 
+                             0.112 *(cdf$WD * (cdf[,dbh]/10)^2* cdf$Ht)^0.916/1000, 
         NA)
-        #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
+        cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)
         #cdf$AGBDead <-ifelse(cdf$CensusStemDied==cdf$CensusNo,(0.0509*cdf$WD * ((cdf[,dbh_d]/10)^2)* cdf$Htd)/1000, NA)
         
