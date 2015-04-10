@@ -1,4 +1,4 @@
-#' @title Function to summarize AGB by Plot and Census Dates. 
+#' @title Function to summarise AGB by Plot and Census Dates. 
 #' @description This function produces a summary of AGB by PlotViewID and Census No. AGB is estimated using a specified equation.
 #' The input dataset should include tree diameter, wood density and the region used for defining the coefficients for estimating tree height.
 #' @param xdataset a dataset  with diameter (use mergefp)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/AGBChave2005DryHeight.R
 \name{AGBChv05DH}
 \alias{AGBChv05DH}
-\title{Function to estimate tree biomass for dry forests (Chave et al. 2005).Uses diameter, wood density  and estimated height (Feldpausch et al. 2011) to estimate biomass.}
+\title{Function to estimate tree biomass for dry forests (Chave et al. 2005).Uses diameter, wood density  and estimated height (based on Feldpausch et al. 2011) to estimate biomass.}
 \usage{
 AGBChv05DH(xdataset, dbh = "DBH4")
 }

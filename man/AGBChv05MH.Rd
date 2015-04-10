@@ -2,7 +2,7 @@
 % Please edit documentation in R/AGBChave2005MoistHeight.R
 \name{AGBChv05MH}
 \alias{AGBChv05MH}
-\title{Function to estimate individual tree biomass for moist forests}
+\title{Function to estimate tree biomass for moist forests (Chave et al. 2005).Uses diameter, wood density and estimated height (based on Feldpausch et al. 2011) to estimate biomass}
 \usage{
 AGBChv05MH(xdataset, dbh = "DBH4")
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/FamilySummary.R
 \name{SummaryFamilies}
 \alias{SummaryFamilies}
-\title{Function for summarizing tree families by plot}
+\title{Function for summarising the abundance of different tree families by plot.}
 \usage{
 SummaryFamilies(xdataset)
 }

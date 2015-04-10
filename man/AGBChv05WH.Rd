@@ -2,7 +2,7 @@
 % Please edit documentation in R/AGBChave2005WetHeight.R
 \name{AGBChv05WH}
 \alias{AGBChv05WH}
-\title{Function to estimate individual biomass for wet forests (Chave et al. 2005).}
+\title{Function to estimate tree biomass for wet forests (Chave et al. 2005). Uses diameter, wood density and estimated height (based on Feldpausch et al. 2011) to estimate biomass.}
 \usage{
 AGBChv05WH(xdataset, dbh = "DBH4")
 }

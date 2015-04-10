@@ -3,12 +3,13 @@
 \alias{BiomasaFP}
 \docType{package}
 \title{
-ForestPlots.net Biomass Package
+ForestPlots.net Package to estimate aboveground biomass (AGB) and rates of AGB change.
 
 }
 \description{
-Package with  functions to estimate Biomass(AGB) and generate outputs using downloads from ForestPlots.net
-www.forestplots.net.
+ Tools for analysing data downloaded from ForestPlots.net. This
+    package includes functions for: a) estimating above ground biomass (AGB)
+    from forest inventory data and b) producing summary statistics for each plot and census. 
 }
 \details{
 \tabular{ll}{
@@ -25,7 +26,7 @@ c) Plot Metadata for R, from the Query Library.
 
 }
 \author{
-Gabriela Lopez-Gonzalez, Martin Sullivan
+Gabriela Lopez-Gonzalez, Martin Sullivan, Tim Baker
 
 Maintainer: Gabriela Lopez-Gonzalez <admin@forestplots.net>
 

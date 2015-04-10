@@ -2,7 +2,7 @@
 % Please edit documentation in R/PlotSummary.R
 \name{SummaryPlotviews}
 \alias{SummaryPlotviews}
-\title{Function for summarizing Plot View metadata}
+\title{Function for summarising Plot View metadata.}
 \usage{
 SummaryPlotviews(xdataset)
 }

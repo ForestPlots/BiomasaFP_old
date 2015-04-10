@@ -1,4 +1,4 @@
-#' @title Function to estimate individual biomass for wet forests (Chave et al. 2005).
+#' @title Function to estimate tree biomass for wet forests (Chave et al. 2005). Uses diameter, wood density and estimated height (based on Feldpausch et al. 2011) to estimate biomass.
 #' @description Function to estimate tree biomass using Chave et al. (2005) equation for wet forests. 
 #' Height is estimated using Feldpausch (2011) regional parameters with Weibull equation.The function adds columns  to the dataset with the biomass information for all alive trees.
 #' This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD) and Allometric RegionID.The function assumes that the diameter used is DBH4, unless other DBH is selected.

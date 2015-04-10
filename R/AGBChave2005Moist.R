@@ -1,5 +1,5 @@
-#' @title Estimates biomass of individual trees.Uses diameter and wood density to estimate biomass.
-#' @description Estimates individual biomass using Chave equation (2005) without height for Moist forests. The function adds columns with the biomass information for all alive trees. This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD).The function assumes that the diameter used is DBH4, unless other DBH is selected. See ForestPlots.net documentation for more information.
+#' @title Function to estimate biomass of individual trees for moist forests (Chave et al. 2005). Uses diameter and wood density to estimate biomass.
+#' @description Estimates individual biomass using Chave et al. (2005) equation without height for Moist forests. The function adds columns with the biomass information for all alive trees. This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD).The function assumes that the diameter used is DBH4, unless other DBH is selected. See ForestPlots.net documentation for more information.
 #' @param xdataset a dataset for estimating biomass
 #' @param dbh a diameter (in mm). 
 #' @author Gabriela Lopez-Gonzalez

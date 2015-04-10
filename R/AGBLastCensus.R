@@ -1,4 +1,4 @@
-#' @title Function to estimate last census AGB per plot.
+#' @title Function to estimate AGB in the final census for each plot.
 #' @description This function produces a summary of last AGB by PlotViewID. AGB is estimated by providing an AGB equation from the package. 
 #' @param xdataset a dataset  with diameter, wood density and census dates for each individual tree (use mergefp)
 #' @param AGBEquation the AGB equation used to produce the summary

@@ -2,7 +2,7 @@
 % Please edit documentation in R/AGBChave2014_Model4.R
 \name{AGBChv14}
 \alias{AGBChv14}
-\title{Function to estimate individual biomass for forests using a pantropical model (Chave et al. 2014).}
+\title{Function to estimate individual biomass for forests using a pantropical model (Chave et al. 2014). Uses diameter, wood density and estimated height (based on Feldpausch et al. 2011) to estimate biomass.}
 \usage{
 AGBChv14(xdataset, dbh = "DBH4")
 }

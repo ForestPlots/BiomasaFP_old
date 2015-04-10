@@ -1,4 +1,4 @@
-#' @title Function to estimate biomass of individual tree records for dry forests (Chave, 2005). Uses diameter and wood density to estimate biomass.
+#' @title Function to estimate biomass of individual tree records for dry forests (Chave et al., 2005). Uses diameter and wood density to estimate biomass.
 #' @description Estimates individual biomass using the Chave equation (2005) without height for Dry forests. The function adds columns with the biomass information for all alive trees.
 #' This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD).The function assumes that the diameter used is DBH4, unless other DBH is selected.
 #' See ForestPlots.net documentation for more information.

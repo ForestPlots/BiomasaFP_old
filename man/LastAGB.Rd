@@ -2,7 +2,7 @@
 % Please edit documentation in R/AGBLastCensus.R
 \name{LastAGB}
 \alias{LastAGB}
-\title{Function to estimate last census AGB per plot.}
+\title{Function to estimate AGB in the final census for each plot.}
 \usage{
 LastAGB(xdataset, AGBEquation, dbh = "DBH4")
 }

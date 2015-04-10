@@ -1,4 +1,4 @@
-#' @title Function for summarizing Plot View metadata
+#' @title Function for summarising Plot View metadata.
 #' 
 #' @description Function for summarizing the information of the Plot Views used (PlotViewID). Output headers are: Country, PlotCode, PlotViewID, LatitudeDecimal, LongitudeDecimal,
 #' First.Census.Date (Decimal date when the Plot was established), No.Censuses (Number of censuses or field campaigns).

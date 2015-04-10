@@ -1,4 +1,4 @@
-#' @title Function to estimate individual tree biomass for moist forests
+#' @title Function to estimate tree biomass for moist forests (Chave et al. 2005).Uses diameter, wood density and estimated height (based on Feldpausch et al. 2011) to estimate biomass
 #' @description Function to estimate individual biomass using the Chave equation (2005) with height for Moist forests. Tree height is estimated using Feldpausch et al. (2011) regional parameters with Weibull equation. The function adds columns with the biomass information for all alive trees. This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD), Allometric RegionID.The function assumes that the diameter used is DBH4, unless other DBH is selected. See ForestPlots.net documentation for more information.
 #' @param xdataset a dataset for estimating biomass
 #' @param dbh a diameter (in mm).

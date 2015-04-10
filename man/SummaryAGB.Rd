@@ -2,7 +2,7 @@
 % Please edit documentation in R/AGBSummaryByPlotViewIDCensusNo.R
 \name{SummaryAGB}
 \alias{SummaryAGB}
-\title{Function to summarize AGB by Plot and Census Dates.}
+\title{Function to summarise AGB by Plot and Census Dates.}
 \usage{
 SummaryAGB(xdataset, AGBEquation, dbh = "DBH4")
 }

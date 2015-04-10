@@ -1,4 +1,4 @@
-#' @title Function for summarizing tree families by plot
+#' @title Function for summarising the abundance of different tree families by plot.
 #' @description  Function to summarize information on tree families (based on APGIII classification) by Plot.
 #' Output headers are: Country, PlotCode, PlotViewID, Family, No.sp (number of species), Frequency (number of individuals in a family).
 #' 
