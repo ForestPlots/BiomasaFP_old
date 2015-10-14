@@ -13,13 +13,13 @@
 #' @param dbh a diameter (in mm). 
 #' @export
 
-AGBChv05W <- function (xdataset, dbh = "DBH4"){
+AGBChv05W <- function (xdataset, dbh = "D4"){
         cdf <- xdataset
         ## Clean file 
         cdf <- CleaningCensusInfo(xdataset) 
         #dbh_d <- paste(dbh,"_D", sep="") 
         
-        cdf$AGBind <- ifelse(cdf$DBH1>0,
+        cdf$AGBind <- ifelse(cdf$D1>0,
                              cdf$WD * exp (-1.239 + (1.980*log(cdf[,dbh]/10))+ (0.207*(log(cdf[,dbh]/10))^2)- (0.0281*(log(cdf[,dbh]/10))^3))/1000, NA)
         #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #The code below was removed as it is difficult to find recruits with the current download format

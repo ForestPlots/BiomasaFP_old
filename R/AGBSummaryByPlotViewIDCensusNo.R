@@ -17,10 +17,10 @@
 
 #' @export
 
-SummaryAGB <- function (xdataset, AGBEquation, dbh ="DBH4"){
+SummaryAGB <- function (xdataset, AGBEquation, dbh ="D4"){
         AGBData <- AGBEquation (xdataset, dbh) 
         IndAL <- aggregate (Alive/PlotArea ~ PlotViewID + Census.No,  data = AGBData, FUN=sum )
-        AGBAlive <-aggregate (AGBind/PlotArea ~ CountryName + PlotViewID + PlotCode +PlotArea+ LatitudeDecimal + LongitudeDecimal+Census.No + Census.Mean.Date, data = AGBData, FUN=sum )
+        AGBAlive <-aggregate (AGBind/PlotArea ~ Country + PlotViewID + PlotCode +PlotArea+ LatitudeDecimal + LongitudeDecimal+Census.No + Census.Mean.Date, data = AGBData, FUN=sum )
         mergeAGBAlive <- merge (AGBAlive, IndAL, by = c('PlotViewID','Census.No'))
         #Exclude dead trees for the time being until new release
         SummaryB<-mergeAGBAlive
@@ -28,7 +28,7 @@ SummaryAGB <- function (xdataset, AGBEquation, dbh ="DBH4"){
         #AGBDeadT <- aggregate (AGBDead ~ PlotViewID + CensusNo, data = AGBData, FUN=sum )
         # SummaryA <- merge (AGBAlive, AGBRecruits, by = c("PlotViewID", "CensusNo"), all.x=TRUE )
         #SummaryB <- merge(SummaryA, AGBDeadT, by= c("PlotViewID", "CensusNo"), all.x=TRUE)
-        colnames(SummaryB) <- c(  'PlotViewID', 'Census.No', 'CountryName', 'PlotCode','PlotArea','LatitudeDecimal','LongitudeDecimal','Census.Mean.Date', 'AGB_ha', 'No.AliveInd_ha')
+        colnames(SummaryB) <- c(  'PlotViewID', 'Census.No', 'Country', 'PlotCode','PlotArea','LatitudeDecimal','LongitudeDecimal','Census.Mean.Date', 'AGB_ha', 'No.AliveInd_ha')
         
         SummaryB <- SummaryB[order(SummaryB$PlotViewID, SummaryB$Census.No, decreasing=FALSE), ]
         SummaryB

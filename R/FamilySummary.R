@@ -12,7 +12,7 @@ SummaryFamilies <- function (xdataset){
         
         
         #1. Create Unique Dataset of treeIds by Families by PlotViewID        
-        xdu <- xdataset[,c('PlotID','PlotCode','CountryName','PlotViewID','FamilyAPGID',
+        xdu <- xdataset[,c('PlotID','PlotCode','Country','PlotViewID','FamilyAPGID',
                          'Family','GenusID','Genus','SpeciesID','Species', 'TreeID'
                          )]
         #extract unique elemments, to create a list of indiviuals and determinations by Plotviewid
@@ -23,17 +23,17 @@ SummaryFamilies <- function (xdataset){
         
        
         #2. Unique Dataset of families 
-        xdu2 <- xdataset[,c('PlotID','PlotCode','CountryName','PlotViewID','FamilyAPGID',
+        xdu2 <- xdataset[,c('PlotID','PlotCode','Country','PlotViewID','FamilyAPGID',
                            'Family','GenusID','Genus','SpeciesID','Species'
         )]
         #extract unique elemments, to create a list of indiviuals and determinations by Plotviewid
         udfile2 <-unique(xdu2)
         
-        Freq2 <-aggregate (SpeciesID ~ CountryName+ PlotCode + PlotViewID +Family, data = udfile2, FUN=length)
-        colnames(Freq2) <- c('CountryName', 'PlotCode', 'PlotViewID','Family', 'No.sp')
+        Freq2 <-aggregate (SpeciesID ~ Country+ PlotCode + PlotViewID +Family, data = udfile2, FUN=length)
+        colnames(Freq2) <- c('Country', 'PlotCode', 'PlotViewID','Family', 'No.sp')
         
         FamilySumm<-merge(Freq2, Freq1, by =c('PlotViewID', 'Family'), all=TRUE)
-        FamilySumma<- FamilySumm[,c('CountryName','PlotCode', 'PlotViewID', 'Family','No.sp','Frequency')]
+        FamilySumma<- FamilySumm[,c('Country','PlotCode', 'PlotViewID', 'Family','No.sp','Frequency')]
         FamilySummb <-FamilySumma[order(FamilySumma$PlotViewID, FamilySumma$Family, decreasing=FALSE), ]
         FamilySummb
         

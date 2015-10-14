@@ -17,7 +17,7 @@
 
 #' @export
 
-AGBch <- function (xdataset, AGBEquation, dbh ="DBH4"){
+AGBch <- function (xdataset, AGBEquation, dbh ="D4"){
         AGBData <- AGBEquation (xdataset, dbh) 
         AGBAlive <-aggregate (cbind(AGBind,  Alive, AGBind/PlotArea) ~ PlotCode + PlotViewID + PlotArea+ Census.No + Census.Mean.Date +LatitudeDecimal + LongitudeDecimal, data = AGBData, FUN=sum )
         SummaryB<-AGBAlive

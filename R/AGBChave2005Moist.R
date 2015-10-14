@@ -11,13 +11,13 @@
 
 #' @export
 
-AGBChv05M <- function (xdataset, dbh = "DBH4"){
+AGBChv05M <- function (xdataset, dbh = "D4"){
         cdf <- xdataset
         ## Clean file 
         cdf <- CleaningCensusInfo(xdataset) 
         #dbh_d <- paste(dbh,"_D", sep="") 
         
-        cdf$AGBind <- ifelse(cdf$DBH1>0,cdf$WD * exp (-1.499 + (2.148*log(cdf[,dbh]/10))+ (0.207*(log(cdf[,dbh]/10))^2)- (0.0281*(log(cdf[,dbh]/10))^3))/1000, NA)
+        cdf$AGBind <- ifelse(cdf$D1>0,cdf$WD * exp (-1.499 + (2.148*log(cdf[,dbh]/10))+ (0.207*(log(cdf[,dbh]/10))^2)- (0.0281*(log(cdf[,dbh]/10))^3))/1000, NA)
         #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #The code below was removed as it is difficult to find recruits with the current download format
         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)

@@ -18,7 +18,7 @@
 #' 
 #' @export
 
-LastAGB <- function (xdataset, AGBEquation, dbh ="DBH4"){
+LastAGB <- function (xdataset, AGBEquation, dbh ="D4"){
         # function format change equation for equation, and populate information AGBData <- AGBEquation (mergedCensus, dbh4) 
         AGBData <- AGBEquation (xdataset, dbh)
         

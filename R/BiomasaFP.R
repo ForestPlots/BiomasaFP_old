@@ -50,15 +50,16 @@ mergefp <- function (a,b,d) {
         #Set as numeric values that need to be numeric (Tree Census information)
         RNAS$Census.Mean.Date <- as.numeric(RNAS$Census.Date)# Mark changed the header
         RNAS$Census.No <- as.numeric(RNAS$Census.No)
+        RNAS$PlotID <- as.numeric(RNAS$PlotID)
         RNAS$PlotViewID <- as.numeric(RNAS$PlotViewID)
         RNAS$TreeID <- as.numeric(RNAS$TreeID)
         RNAS$FamilyAPGID <- as.numeric(RNAS$FamilyAPGID)
         RNAS$GenusID <- as.numeric(RNAS$GenusID)
         RNAS$SpeciesID <- as.numeric(RNAS$SpeciesID)
-        RNAS$DBH1<- as.numeric(gsub("=","",RNAS$DBH1))
-        RNAS$DBH2<- as.numeric(gsub("=","",RNAS$DBH2))
-        RNAS$DBH3<- as.numeric(gsub("=","",RNAS$DBH3))
-        RNAS$DBH4<- as.numeric(gsub("=","",RNAS$DBH4))
+        RNAS$D1<- as.numeric(gsub("=","",RNAS$D1))
+        RNAS$D2<- as.numeric(gsub("=","",RNAS$D2))
+        RNAS$D3<- as.numeric(gsub("=","",RNAS$D3))
+        RNAS$D4<- as.numeric(gsub("=","",RNAS$D4))
         RNAS$POM<- as.numeric(gsub("=","",RNAS$POM))
         RNAS$F1<- (gsub("=","",RNAS$F1))
         RNAS$F2<- (gsub("=","",RNAS$F2))
@@ -66,15 +67,16 @@ mergefp <- function (a,b,d) {
         RNAS$F4<- (gsub("=","",RNAS$F4))
         RNAS$Height<-as.numeric(gsub("=","",RNAS$Height))
         RNAS$F5<- as.numeric(gsub("=","",RNAS$F5))
-        RNAS$CI<-ifelse(RNAS$Crown.Illumination.Code=="",NA, (gsub("=","",RNAS$Crown.Illumination.Code )))
-        RNAS$LI<-as.numeric(gsub("=","",RNAS$Liana.Crown.Infestation.Code))    
+        RNAS$CI<-ifelse(RNAS$CI=="",NA, (gsub("=","",RNAS$CI )))
+        RNAS$LI<-ifelse(RNAS$LI=="",NA, (gsub("=","",RNAS$LI ))) 
+       
         
         
         #Remove Duplicated treeids due to vouchers; Select columns that will be used in the package
         RNASu <- RNAS[,c('PlotID','Plot.Code','Country','Census.Mean.Date',
                          'Census.No','PlotViewID','TreeID','FamilyAPGID',
                          'Family','GenusID','Genus','SpeciesID','Species',
-                         'DBH1','DBH2','DBH3','DBH4','POM','F1','F2',
+                         'D1','D2','D3','D4','POM','F1','F2',
                          'F3','F4','Height','F5', 'CI','LI'
         )]
         #extract unique elements, Unique dataset for census data
@@ -86,24 +88,78 @@ mergefp <- function (a,b,d) {
         W$WD <- as.numeric(gsub("=","", W$WD))
         #head(W)
         #Set as numeric values that need to be numeric (Metadata values)
+        MT$PlotID <- as.numeric(gsub("=","",MT$PlotID))
         MT$PlotViewID <- as.numeric (MT$PlotViewID)
         MT$Altitude <- as.numeric (MT$Altitude)
         MT$LatitudeDecimal <- as.numeric (MT$LatitudeDecimal)
         MT$LongitudeDecimal <- as.numeric (MT$LongitudeDecimal)
         MT$PlotArea<- as.numeric(gsub("=","",MT$PlotArea))
-        MT$AllometricRegionID <- as.numeric (MT$AllometricRegionID)
+        MT$AllometricRegionID <-as.numeric(gsub("=","",MT$AllometricRegionID))
+        MT$AllometricRegionID <-as.numeric(gsub("NULL","NA",MT$AllometricRegionID))
+        
+        MT$ClusterID <- as.numeric(gsub("=","",MT$ClusterID))
+        MT$ClusterID <- as.numeric(gsub("NULL","NA",MT$ClusterID))
+        
+        MT$ForestMoistureID <- as.numeric(gsub("=","",MT$ForestMoistureID))
+        MT$ForestMoistureID <- as.numeric(gsub("NULL","NA",MT$ForestMoistureID))
+        
+        MT$ForestEdaphicID <- as.numeric(gsub("=","",MT$ForestEdaphicID))
+        MT$ForestEdaphicID <- as.numeric(gsub("NULL","NA",MT$ForestEdaphicID))
+        
+        MT$ForestEdaphicHeightID <- as.numeric(gsub("=","",MT$ForestEdaphicHeightID))
+        MT$ForestEdaphicHeightID <- as.numeric(gsub("NULL","NA",MT$ForestEdaphicHeightID))
+        
+        MT$ForestElevationID <- as.numeric(gsub("=","",MT$ForestElevationID))
+        MT$ForestElevationID <- as.numeric(gsub("NULL","NA",MT$ForestElevationID))
+        
+        MT$ForestElevationHeightID <- as.numeric(gsub("=","",MT$ForestElevationHeightID))
+        MT$ForestElevationHeightID <- as.numeric(gsub("NULL","NA",MT$ForestElevationHeightID))
+        
+        MT$BiogeographicalRegionID <- as.numeric(gsub("=","",MT$BiogeographicalRegionID))
+        MT$BiogeographicalRegionID <- as.numeric(gsub("NULL","NA",MT$BiogeographicalRegionID))
+        
+        # Select MT columns to merge 
+        MT <- MT[, c('PlotID','PlotViewID','PlotCode','Altitude','LatitudeDecimal','LongitudeDecimal',
+                     'PlotArea', 'ClusterName', 'ClusterID', 'ForestMoistureName',
+                     'ForestMoistureID', 'ForestEdaphicName', 'ForestEdaphicID',
+                     'ForestEdaphicHeightName',	'ForestEdaphicHeightID','ForestElevationName',
+                     'ForestElevationID','ForestElevationHeightName', 'ForestElevationHeightID',
+                     'BiogeographicalRegionName','BiogeographicalRegionID','RegionName','Continent','AllometricRegionID')]
         
         #head(MT)
         
+        
         #merge information
-        dataset <- merge(Udfile, MT, by = c('PlotViewID'), x.all=TRUE)
+        dataset <- merge(Udfile, MT, by = c('PlotViewID','PlotID'), x.all=TRUE)
+        #head(dataset)
         datasetb <- merge(dataset, W, by = c('PlotViewID','TreeID','PlotID','PlotCode'), x.all=TRUE)
+        #head(datasetb)
         #Select columns for mergefp output
-        datasetc <- datasetb[,c('ContinentName', 'CountryName', 'PlotCode', 'PlotID','PlotViewID','LatitudeDecimal','LongitudeDecimal','Altitude','PlotArea','AllometricRegionID',
-                                'TreeID','Census.No', 'Census.Mean.Date','FamilyAPGID',
-                                'Family','GenusID','Genus','SpeciesID','Species', 'DBH1','DBH2','DBH3','DBH4','POM','F1','F2','F3','F4','Height','F5','WD','LI','CI')]
-        #datasetc
+        datasetc <- datasetb[,c('Continent', 'Country', 'PlotID', 'PlotCode'
+                                ,'PlotViewID','LatitudeDecimal','LongitudeDecimal','Altitude','PlotArea',
+                                'TreeID','FamilyAPGID','Family','GenusID','Genus','SpeciesID','Species', 'Census.No', 'Census.Mean.Date',
+                                'D1','D2','D3','D4','POM','F1','F2','F3','F4','Height','F5','LI','CI','WD',
+                                'AllometricRegionID',
+                                'ClusterID', 
+                                'ForestMoistureID','ForestEdaphicID',
+                                'ForestEdaphicHeightID',
+                                'ForestElevationID','ForestElevationHeightID',
+                                'BiogeographicalRegionID'
+        )]
+        #head(datasetc)
+        
+        # add Palm/monocot category  for records from the following families: 'Arecaceae','Strelitziaceae','Poaceae','Cyatheaceae'
+        datasetc$Palm <-  ifelse ( grepl('Arecaceae',datasetc$Family)==TRUE |
+                                           grepl('Strelitziaceae',datasetc$Family)==TRUE |
+                                           grepl('Poaceae',datasetc$Family)==TRUE |
+                                           grepl('Cyatheaceae',datasetc$Family)==TRUE
+                                   ,1,0)
+        
+        
+        datasetc$PomChange <- ifelse(grepl('6',datasetc$F4)==TRUE,1,0)
+        
         datasetc       
+      
         #head(datasetc)
 }
 
@@ -126,7 +182,7 @@ CleaningCensusInfo <- function (dfmerged) {
         #head(dfm) to test if Alive and Snapped have been aded correctly
         
         #Change Census.No to CensusNo once new format is implemented
-        DeadorSnapped <-data.frame (dfm[(dfm$Alive == 0 | dfm$Snapped ==1) , c('PlotViewID', 'Census.No', 'TreeID',  'DBH1', 'Alive', 'Snapped')])
+        DeadorSnapped <-data.frame (dfm[(dfm$Alive == 0 | dfm$Snapped ==1) , c('PlotViewID', 'Census.No', 'TreeID',  'D1', 'Alive', 'Snapped')])
         #head(dfm)
         
         # if dead or snapped is empty
@@ -134,13 +190,13 @@ CleaningCensusInfo <- function (dfmerged) {
                 
                 Clean <-dfm
                 
-                #head (CleanA)'CensusStemDied','Dead','DBH1_D','DBH2_D','DBH3_D','DBH4_D' 
+                #head (CleanA)'CensusStemDied','Dead','D1_D','D2_D','D3_D','D4_D' 
                 Clean$CensusStemDied <- NA
                 Clean$Dead <- NA
-                Clean$DBH1_D <- NA
-                Clean$DBH2_D <- NA
-                Clean$DBH3_D <- NA
-                Clean$DBH4_D <- NA
+                Clean$D1_D <- NA
+                Clean$D2_D <- NA
+                Clean$D3_D <- NA
+                Clean$D4_D <- NA
                 Clean
         }
         
@@ -164,8 +220,8 @@ CleaningCensusInfo <- function (dfmerged) {
                 #head (PlotDataDeadA)
                 #Merged with Plot Data and select previous Census of when trees died/snapped
                 #Change Census.No to CensusNo once new format is implemented
-                PlotDataDeadB <- PlotDataDeadA[PlotDataDeadA$Census.No == PlotDataDeadA$CensusNoDead-1 & !is.na(PlotDataDeadA$CensusNoDead), c('PlotViewID','CensusNoDead', 'TreeID','DBH1', 'DBH2','DBH3','DBH4')]
-                colnames(PlotDataDeadB)<- c('PlotViewID', 'CensusNoDead', 'TreeID', 'DBH1_D','DBH2_D','DBH3_D','DBH4_D')
+                PlotDataDeadB <- PlotDataDeadA[PlotDataDeadA$Census.No == PlotDataDeadA$CensusNoDead-1 & !is.na(PlotDataDeadA$CensusNoDead), c('PlotViewID','CensusNoDead', 'TreeID','D1', 'D2','D3','D4')]
+                colnames(PlotDataDeadB)<- c('PlotViewID', 'CensusNoDead', 'TreeID', 'D1_D','D2_D','D3_D','D4_D')
                 #head (PlotDataDeadB)
                 #Clean Dataset
                 #Change Census.No to CensusNo once new format is implemented
@@ -175,17 +231,25 @@ CleaningCensusInfo <- function (dfmerged) {
                 #      CleanA$Dead <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,1, NA) Censuswhen tree/stem contributes to dead biomass (either as dead or as snapped)
                 CleanA$CensusStemDied <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$Census.No, NA)
                 CleanA$Dead <- ifelse(CleanA$F1==0,1, 0) 
-                CleanA$DBH1_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$DBH1_D, NA)
-                CleanA$DBH2_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$DBH2_D, NA)
-                CleanA$DBH3_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$DBH3_D, NA)
-                CleanA$DBH4_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$DBH4_D, NA)
+                CleanA$D1_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$D1_D, NA)
+                CleanA$D2_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$D2_D, NA)
+                CleanA$D3_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$D3_D, NA)
+                CleanA$D4_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$D4_D, NA)
                 #head(CleanA)
-                Clean <- CleanA[ , c('ContinentName','CountryName','PlotCode', 'PlotID','PlotViewID','LatitudeDecimal', 'LongitudeDecimal','Altitude','PlotArea',
-                                     'AllometricRegionID' ,'TreeID','Census.No','Census.Mean.Date', 'FamilyAPGID','Family'
-                                     ,'GenusID','Genus','SpeciesID','Species','DBH1','DBH2','DBH3','DBH4','POM','F1','F2','F3','F4','Height','F5',
-                                     'WD','LI','CI','Alive','Snapped' ,'CensusStemDied','Dead','DBH1_D','DBH2_D','DBH3_D','DBH4_D'
+                Clean <- CleanA[ , c( 'Continent', 'Country', 'PlotCode', 'PlotID','PlotViewID', 'LatitudeDecimal',
+                                      'LongitudeDecimal', 'Altitude',	'PlotArea',
+                                      'TreeID',	'FamilyAPGID',	'Family',	
+                                      'GenusID', 'Genus', 'SpeciesID',	'Species',	
+                                      'Census.No', 'Census.Mean.Date',	
+                                      'D1', 'D2', 'D3',	'D4', 'POM', 'F1', 'F2',
+                                      'F3', 'F4', 'Height', 'F5', 'LI',	'CI',
+                                      'WD', 'AllometricRegionID', 'ClusterID',
+                                      'ForestMoistureID', 'ForestEdaphicID',
+                                      'ForestEdaphicHeightID',	'ForestElevationID',	
+                                      'ForestElevationHeightID', 'BiogeographicalRegionID',
+                                      'Palm', 'PomChange',  'Alive','Snapped' ,'CensusStemDied','Dead','D1_D','D2_D','D3_D','D4_D'
                 )]
-                # version to implement once Alive, POMChange,New Recruit, WD is available from Advanced Search
+                # Discuss if this version should be implemented with all the subplot and t1 information
                 #Clean <- CleanA[ , c('TreeID','PlotViewID','ContinentName','CountryID','CountryName','AllometricRegionID','PlotID','PlotCode','PlotViewPlotCensusID','CensusNo','MeanDecimalDate', 'Subplot_Standard','x_standard','y_standard','SubPlotT1','SubPlotT2','x','y','FamilyAPGID','FamilyAPGName','GenusID','GenusName','SpeciesID','FullSpeciesName',        'TagNumber','DBH1','DBH2','DBH3','DBH4','POM','Flag1','Flag2','Flag3','Flag4','CI','LI','Alive','NewRecruit','POMChange','AliveNormal',  'MultipleStem',        'Snapped','WD','CensusStemDied','Dead','DBH1_D','DBH2_D','DBH3_D','DBH4_D','Altitude','LatitudeDecimal', 'LongitudeDecimal','PlotArea')]
                 
                 Clean
