@@ -1,7 +1,7 @@
 Package: BiomasaFP
 Type: Package
 Title: Tools for analysing data downloaded from ForestPlots.net
-Version: 1.0
+Version: 1.1
 Date: 2015-03-11
 Author: Gabriela Lopez-Gonzalez, Martin Sullivan, Tim Baker
 Maintainer: Gabriela Lopez-Gonzalez <admin@forestplots.net>
