@@ -149,14 +149,15 @@ mergefp <- function (a,b,d) {
         #head(datasetc)
         
         # add Palm/monocot category  for records from the following families: 'Arecaceae','Strelitziaceae','Poaceae','Cyatheaceae'
-        datasetc$Palm <-  ifelse ( grepl('Arecaceae',datasetc$Family)==TRUE |
+        datasetc$Monocot <-  ifelse ( grepl('Arecaceae',datasetc$Family)==TRUE |
                                            grepl('Strelitziaceae',datasetc$Family)==TRUE |
                                            grepl('Poaceae',datasetc$Family)==TRUE |
                                            grepl('Cyatheaceae',datasetc$Family)==TRUE
                                    ,1,0)
         
         
-        datasetc$PomChange <- ifelse(grepl('6',datasetc$F4)==TRUE,1,0)
+        datasetc$PomChange <- ifelse (grepl('6',datasetc$F4)==TRUE,1,0)
+        datasetc$Recruit   <- ifelse (grepl('n',datasetc$F1)==TRUE,1,0)
         
         datasetc       
       
@@ -247,7 +248,7 @@ CleaningCensusInfo <- function (dfmerged) {
                                       'ForestMoistureID', 'ForestEdaphicID',
                                       'ForestEdaphicHeightID',	'ForestElevationID',	
                                       'ForestElevationHeightID', 'BiogeographicalRegionID',
-                                      'Palm', 'PomChange',  'Alive','Snapped' ,'CensusStemDied','Dead','D1_D','D2_D','D3_D','D4_D'
+                                      'Monocot', 'PomChange',  'Alive','Snapped' ,'Recruit','CensusStemDied','Dead','D1_D','D2_D','D3_D','D4_D'
                 )]
                 # Discuss if this version should be implemented with all the subplot and t1 information
                 #Clean <- CleanA[ , c('TreeID','PlotViewID','ContinentName','CountryID','CountryName','AllometricRegionID','PlotID','PlotCode','PlotViewPlotCensusID','CensusNo','MeanDecimalDate', 'Subplot_Standard','x_standard','y_standard','SubPlotT1','SubPlotT2','x','y','FamilyAPGID','FamilyAPGName','GenusID','GenusName','SpeciesID','FullSpeciesName',        'TagNumber','DBH1','DBH2','DBH3','DBH4','POM','Flag1','Flag2','Flag3','Flag4','CI','LI','Alive','NewRecruit','POMChange','AliveNormal',  'MultipleStem',        'Snapped','WD','CensusStemDied','Dead','DBH1_D','DBH2_D','DBH3_D','DBH4_D','Altitude','LatitudeDecimal', 'LongitudeDecimal','PlotArea')]

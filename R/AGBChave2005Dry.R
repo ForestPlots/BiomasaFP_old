@@ -24,7 +24,7 @@ AGBChv05D <- function (xdataset, dbh = "D4"){
         cdf <- CleaningCensusInfo(xdataset) 
         #test Cleanfile
         #CleaningCensusInfo(cdf)
-        #dbh_d <- paste(dbh,"_D", sep="") 
+        dbh_d <- paste(dbh,"_D", sep="") 
         
         cdf$AGBind <- ifelse(cdf$D1>0,
                              cdf$WD * exp (-0.667 + (1.784*log(cdf[,dbh]/10))+ (0.207*(log(cdf[,dbh]/10))^2)- (0.0281*(log(cdf[,dbh]/10))^3))/1000, NA)
@@ -32,9 +32,9 @@ AGBChv05D <- function (xdataset, dbh = "D4"){
         #The code below was removed as it is difficult to find recruits with the current download format
         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)
         #The code below was removed and would be implemented later
-        #cdf$AGBDead<-ifelse(cdf$CensusStemDied==cdf$CensusNo, 
-        # cdf$WD * exp (-1.499 + (2.148*log(cdf[,dbh_d]/10))+ (0.207*(log(cdf[,dbh_d]/10))^2)- (0.0281*(log(cdf[,dbh_d]/10))^3))/1000
-        # , NA)
+        cdf$AGBDead<-ifelse(cdf$CensusStemDied==cdf$Census.No, 
+                            cdf$WD * exp (-0.667 + (1.784*log(cdf[,dbh_d]/10))+ (0.207*(log(cdf[,dbh_d]/10))^2)- (0.0281*(log(cdf[,dbh_d]/10))^3))/1000
+        , NA)
         
         cdf     
 }

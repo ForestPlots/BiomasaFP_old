@@ -21,14 +21,31 @@ SummaryAGB <- function (xdataset, AGBEquation, dbh ="D4"){
         AGBData <- AGBEquation (xdataset, dbh) 
         IndAL <- aggregate (Alive/PlotArea ~ PlotViewID + Census.No,  data = AGBData, FUN=sum )
         AGBAlive <-aggregate (AGBind/PlotArea ~ Country + PlotViewID + PlotCode +PlotArea+ LatitudeDecimal + LongitudeDecimal+Census.No + Census.Mean.Date, data = AGBData, FUN=sum )
-        mergeAGBAlive <- merge (AGBAlive, IndAL, by = c('PlotViewID','Census.No'))
-        #Exclude dead trees for the time being until new release
-        SummaryB<-mergeAGBAlive
-        #AGBRecruits <- aggregate (cbind(AGBRec,  NewRecruit) ~ PlotViewID + CensusNo,  data = AGBData, FUN=sum )
-        #AGBDeadT <- aggregate (AGBDead ~ PlotViewID + CensusNo, data = AGBData, FUN=sum )
-        # SummaryA <- merge (AGBAlive, AGBRecruits, by = c("PlotViewID", "CensusNo"), all.x=TRUE )
-        #SummaryB <- merge(SummaryA, AGBDeadT, by= c("PlotViewID", "CensusNo"), all.x=TRUE)
-        colnames(SummaryB) <- c(  'PlotViewID', 'Census.No', 'Country', 'PlotCode','PlotArea','LatitudeDecimal','LongitudeDecimal','Census.Mean.Date', 'AGB_ha', 'No.AliveInd_ha')
+        # Find Recruits
+        Recruits<- AGBData[AGBData$Recruit==1,]
+        AGBRec <- aggregate (AGBind/PlotArea ~ PlotViewID + Census.No,  data = Recruits, FUN=sum )
+        colnames(AGBRec) <- c('PlotViewID','Census.No','AGBRecs')
+        IndRec <- aggregate (Recruit/PlotArea ~ PlotViewID + Census.No,  data = Recruits, FUN=sum )
+     
+        #merge recruit information
+        Recs<- merge(AGBRec, IndRec, by =  c('PlotViewID','Census.No'), all.x=TRUE)
+        
+        # Dead stems  get only stems that are dead and have a agb, to count only dead trees ones
+        DeadTrees <-AGBData[AGBData$Dead==1 & !is.na(AGBData$D1_D),]
+        IndDead <- aggregate (Dead/PlotArea ~ PlotViewID + Census.No,  data = DeadTrees, FUN=sum )
+        AGBDe <-aggregate (AGBDead/PlotArea ~  PlotViewID + Census.No, data = AGBData, FUN=sum )
+        
+        #merge Dead trees
+        Deads <- merge(AGBDe, IndDead, by = c('PlotViewID','Census.No'),all.x=TRUE)
+     
+        # merge all summaries
+        mergeAGBAlive <- merge (AGBAlive, IndAL, by = c('PlotViewID','Census.No'),all.x=TRUE)
+        mergeB <-  merge(mergeAGBAlive, Recs, by = c('PlotViewID','Census.No'),all.x=TRUE)
+        mergeC <- merge (mergeB, Deads, by=  c('PlotViewID','Census.No'),all.x=TRUE) 
+        
+        SummaryB <- mergeC
+
+        #colnames(SummaryB) <- c(  'PlotViewID', 'Census.No', 'Country', 'PlotCode','PlotArea','LatitudeDecimal','LongitudeDecimal','Census.Mean.Date', 'AGB_ha', 'No.AliveInd_ha')
         
         SummaryB <- SummaryB[order(SummaryB$PlotViewID, SummaryB$Census.No, decreasing=FALSE), ]
         SummaryB
