@@ -20,7 +20,7 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 		Chv14=FALSE
 	}
 
-        AGBData <- AGBEquation (xdataset, dbh,height.data=height.data,param.type=param.type) ) 
+        AGBData <- AGBEquation (xdataset, dbh,height.data=height.data,param.type=param.type) 
 	  IndAL <- aggregate (Alive/PlotArea ~ PlotViewID + Census.No,  data = AGBData, FUN=sum )
         AGBAlive <-aggregate (AGBind/PlotArea ~ PlotViewID + Census.No, data = AGBData, FUN=sum ) 
 	  AGBData$Census.prev<-AGBData[match(paste(AGBData$TreeID,AGBData$Census.No-1),paste(AGBData$TreeID,AGBData$Census.No)),"Census.Mean.Date"]
@@ -69,7 +69,7 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
         Deads <- merge(AGBDe, IndDead, by = c('PlotViewID','Census.No'),all.x=TRUE)
      
 	  # Unobserved growth of dead trees
-	  growth.rate<-SizeClassGrowth(xdataset, AGBEquation)
+	  growth.rate<-SizeClassGrowth(xdataset,dbh=dbh)
 	  dead2<-merge(DeadTrees,growth.rate,by="PlotViewID",all.x=T)
         dead2$DBH.death<-ifelse(dead2$D4_D<200,dead2$Delta.time*dead2$Class1,
 		ifelse(dead2$D4_D<400,dead2$Delta.time*dead2$Class2,
