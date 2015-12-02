@@ -15,7 +15,7 @@
 #' 
 #' @export
 
-AGBChv05D <- function (xdataset, dbh = "D4"){
+AGBChv05D <- function (xdataset, dbh = "D4",height.data=NULL,param.type=NULL){
         cdf <- xdataset
         #test using a merged dataset
         #cdf<- (mergedCensusB)

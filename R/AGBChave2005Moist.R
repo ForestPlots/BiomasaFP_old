@@ -11,7 +11,7 @@
 
 #' @export
 
-AGBChv05M <- function (xdataset, dbh = "D4"){
+AGBChv05M <- function (xdataset, dbh = "D4",height.data=NULL,param.type=NULL){
         cdf <- xdataset
         ## Clean file 
         cdf <- CleaningCensusInfo(xdataset) 
