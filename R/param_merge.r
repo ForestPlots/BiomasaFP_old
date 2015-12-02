@@ -1,7 +1,10 @@
-#' @description Function to merge fitted parameters of Weibull height-diameter equations to tree data returned by mergefp
-#' @data Object returned by mergefp
-#' @wparm Object returned by fit.weib
+#' @title Merge fitted height-diameter parameters with tree by tree data
+#' @description Function to merge fitted parameters of Weibull height-diameter equations to tree data returned by \code{mergefp}
+#' @param data Object returned by mergefp
+#' @param wparm Object returned by \code{fit.weib}
 #' @author Martin Sullivan, Gabriela Lopez-Gonzalez
+
+#' @export
 
 param.merge<-function(data,wparm){
 

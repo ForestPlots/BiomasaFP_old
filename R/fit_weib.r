@@ -1,7 +1,11 @@
+#' @title Function to fit height-diamter models
 #' @description Function for fitting height-diameter Weibull models by non-linear least squares
-#' @data Object returned by mergefp
-#' @return.mods Logical. If TRUE, full model fits are returned. Otherwise (default) only the fitted coefficents are returned.  
+#' @param data Object returned by mergefp
+#' @param return.mods Logical. If TRUE, full model fits are returned. Otherwise (default) only the fitted coefficents are returned. 
+#' @return A data frame with PlotViewID and fitted parameters of Weibull models at each level. 
 #' @author Martin Sullivan, Gabriela Lopez-Gonzalez
+
+#' @export
 
 fit.weib<-function(data,return.mods=FALSE){
 

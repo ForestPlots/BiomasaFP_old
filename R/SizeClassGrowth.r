@@ -1,8 +1,12 @@
-#'	SizeClassGrowth
-#'	@description Estimate mean or median growth rate for size classes 100-200mm DBH, 200-400mm DBH and >400mm DBH.
-#'	@xdataset Object returned by mergefp
-#'	@method Either "median" (default) or "mean". If any value other than "median" is entered the mean will be calculated.
-#'	@dbh Name of column with diameter measurement to use. Default to "D4".
+#' @title SizeClassGrowth
+#' @description Estimate mean or median growth rate for size classes 100-200mm DBH, 200-400mm DBH and >400mm DBH.
+#' @param xdataset Object returned by \code{mergefp}
+#' @param method Either "median" (default) or "mean". If any value other than "median" is entered the mean will be calculated.
+#' @param dbh Name of column with diameter measurement to use. Default to "D4".
+#' @return A data frame with PlotViewID, medain/mean growth rates for each size class and mean wood density in each plot
+#' @author Martin Sullivan
+
+#' @export
 
 
 SizeClassGrowth<-function(xdataset, method="median",dbh ="D4"){

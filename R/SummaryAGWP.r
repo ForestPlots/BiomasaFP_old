@@ -1,12 +1,15 @@
-#'	SummaryAGWP
-#'	@description Function to estimate AGWP by plotview and census interval, including estimating unobserved recruitment and growth of trees that died between census periods
-#'	@xdataset Object returned by mergefp.
-#'	@AGBEquation Allometric equation function to use when estimating AGB.
-#'	@dbh Name of column containing diameter data. Default is "D4".
-#'	@rec.meth Method used to estimate AGWP of recruits. If 0 (default), estimates growth from starting diameter of 0mm. If another value is provided, then growth is estimated from a starting diameter of 100mm.
-#'	@height.data Object returned by param.merge. Used to supply parameters of local allometric equations. If NULL (default), regional height diameter equations are used.
-#'	@param.type Local height diameter to use. One of "Best" (defualt), "BioRF","ClusterF" ... NEED TO DECIDE WHICH OF THESE TO RETURN. Ignored if height.data=NULL.
-#'	@author Martin Sullivan, Gabriela Lopez-Gonzalez
+#' @title SummaryAGWP
+#' @description Function to estimate AGWP by plotview and census interval, including estimating unobserved recruitment and growth of trees that died between census periods
+#' @param xdataset Object returned by \code{mergefp}.
+#' @param AGBEquation Allometric equation function to use when estimating AGB.Note only \code{AGBChv14} and \code{AGBChv05MH} are fully implemented, other Chave 2005 equations can by used for observed components by unobserved components will use \code{AGBChv05MH}. Plan to implement other equations fully in future.
+#' @param dbh Name of column containing diameter data. Default is "D4".
+#' @param rec.meth Method used to estimate AGWP of recruits. If 0 (default), estimates growth from starting diameter of 0mm. If another value is provided, then growth is estimated from a starting diameter of 100mm.
+#' @param height.data Object returned by \code{param.merge}. Used to supply parameters of local allometric equations. If NULL (default), regional height diameter equations are used.
+#' @param param.type Local height diameter to use. One of "Best" (defualt), "BioRF","ClusterF" ... NEED TO DECIDE WHICH OF THESE TO RETURN. Ignored if \code{height.data=NULL}.
+#' @return A data frame with PlotViewID, CensusNo, and observed and unobserved elements of AGWP, stem dynamics and AGB mortality.
+#' @author Martin Sullivan, Gabriela Lopez-Gonzalez
+
+#' @export	
 
 
 
@@ -60,7 +63,7 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
         #merge recruit information
         Recs<- merge(AGBRec, IndRec, by =  c('PlotViewID','Census.No'), all.x=TRUE)
         
-        # Dead stems  get only stems that are dead and have a agb, to count only dead trees ones
+        # Dead stems  get only stems that are dead and have an AGB_D, to count only dead trees ones
         DeadTrees <-AGBData[AGBData$Dead==1 & !is.na(AGBData$D1_D),]
         #Match in size class growth rate
 	  IndDead <- aggregate (Dead/PlotArea ~ PlotViewID + Census.No,  data = DeadTrees, FUN=sum )
