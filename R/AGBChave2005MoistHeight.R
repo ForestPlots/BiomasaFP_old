@@ -40,7 +40,7 @@ AGBChv05MH <- function (xdataset, dbh = "D4",height.data=NULL,param.type=Best){
          cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$Census.No, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh_d]/10)^cdf$c_par)), NA)
        
         # Calculate AGB by stem Alive type
-        cdf$AGBind <- ifelse(cdf$D1>0, (0.0509*cdf$WD * ((cdf[,dbh]/10)^2)* cdf$HtF)/1000, NA)
+        cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & cdf$CensusStemDied>cdf$Census.No, (0.0509*cdf$WD * ((cdf[,dbh]/10)^2)* cdf$HtF)/1000, NA)
         #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)# maybe no need to estimate this by 
         cdf$AGBDead <-ifelse(cdf$CensusStemDied==cdf$Census.No,(0.0509*cdf$WD * ((cdf[,dbh_d]/10)^2)* cdf$Htd)/1000, NA)
