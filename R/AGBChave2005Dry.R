@@ -26,7 +26,7 @@ AGBChv05D <- function (xdataset, dbh = "D4"){
         #CleaningCensusInfo(cdf)
         dbh_d <- paste(dbh,"_D", sep="") 
         
-        cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & cdf$CensusStemDied>cdf$Census.No,
+        cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & (cdf$CensusStemDied>cdf$Census.No | is.na(cdf$IsSnapped)),
                              cdf$WD * exp (-0.667 + (1.784*log(cdf[,dbh]/10))+ (0.207*(log(cdf[,dbh]/10))^2)- (0.0281*(log(cdf[,dbh]/10))^3))/1000, NA)
         #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #The code below was removed as it is difficult to find recruits with the current download format

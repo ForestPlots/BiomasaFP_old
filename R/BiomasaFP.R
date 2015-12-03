@@ -253,13 +253,14 @@ CleaningCensusInfo <- function (dfmerged) {
                 
                 # Alive status is corrected for trees that are back to live
                 
-                CleanA$Alive <- ifelse(CleanA$CensusNoDead>CleanA$Census.No & CleanA$IsSnapped==0,1,
-                                      ifelse(CleanA$CensusNoDead>CleanA$Census.No & CleanA$IsSnapped==1,1,
-                                        ifelse(CleanA$CensusNoDead==CleanA$Census.No & CleanA$IsSnapped==0,0,
-                                               ifelse(CleanA$CensusNoDead==CleanA$Census.No & CleanA$IsSnapped==1,1, 
-                                                 ifelse(CleanA$CensusNoDead<CleanA$Census.No & CleanA$IsSnapped==1 & CleanA$F2==1, 1,
-                                                        ifelse(CleanA$CensusNoDead<CleanA$Census.No & CleanA$IsSnapped==1 & CleanA$F1==0,0,NA
-                                                        ) )))))
+                CleanA$Alive <- ifelse(CleanA$F2==1 & is.na(CleanA$IsSnapped),1,
+                                        ifelse(CleanA$CensusNoDead>CleanA$Census.No  & CleanA$IsSnapped==0,1,
+                                                ifelse(CleanA$CensusNoDead>CleanA$Census.No & CleanA$IsSnapped==1,1,
+                                                        ifelse(CleanA$CensusNoDead==CleanA$Census.No & CleanA$IsSnapped==0,0,
+                                                                ifelse(CleanA$CensusNoDead==CleanA$Census.No & CleanA$IsSnapped==1,1, 
+                                                                        ifelse(CleanA$CensusNoDead<CleanA$Census.No & CleanA$IsSnapped==1 & CleanA$F2==1, 1,
+                                                                                ifelse(CleanA$CensusNoDead<CleanA$Census.No & CleanA$IsSnapped==1 & CleanA$F1==0,0,NA
+                                                                                )))))))
                                       
                                        
                 
