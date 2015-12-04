@@ -1,4 +1,4 @@
-
+﻿
 #' @title Function for reading and merging data downloaded from ForestPlots.net
 #' @description Function for reading and merging the 3 datasets needed for estimating biomass: Census Data (a), 
 #' Metadata (b), wood density from each individual tree (c). The tree datasets can be donwloaded from ForestPlots.net.
@@ -219,6 +219,7 @@ CleaningCensusInfo <- function (dfmerged) {
                 DeadFirstCensusC<- DeadFirstCensusB[,c('PlotViewID','Census.No', 'TreeID','Snapped')]
                 colnames (DeadFirstCensusC) <-c('PlotViewID','CensusNoDead', 'TreeID', 'IsSnapped')
                 DeadFirstCensus <- DeadFirstCensusC
+
                 #write.csv (DeadFirstCensus, file = 'dead.csv')
                 #head(DeadFirstCensus)
                 
@@ -243,7 +244,11 @@ CleaningCensusInfo <- function (dfmerged) {
                 #      CleanA$Dead <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,1, NA) Censuswhen tree/stem contributes to dead biomass (either as dead or as snapped)
                 # Changed this statement to display the census when the tree died in each line, as then it can be used for ifelse estatement of AGB of individuals
                 CleanA$CensusStemDied <- CleanA$CensusNoDead
-                
+		#Change no data value for CensusStemDied to 9999 - this means that trees that have not yet died with have CensusStemDied>CensusNo
+		CleanA$CensusStemDied[is.na(CleanA$CensusStemDied)]<-9999  
+		CleanA$CensusNoDead[is.na(CleanA$CensusNoDead)]<-9999                
+		#Trees that were never snapped are NA for IsSnapped - correct by changing to 0
+		CleanA$IsSnapped[is.na(CleanA$IsSnapped)]<-0
                 CleanA$Dead <- ifelse(CleanA$F1==0 & CleanA$CensusNoDead==CleanA$Census.No,1, 
                                       ifelse (CleanA$CensusNoDead>CleanA$Census.No,0, NA))
                 CleanA$D1_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$D1_D, NA)

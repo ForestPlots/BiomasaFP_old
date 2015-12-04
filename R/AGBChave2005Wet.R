@@ -13,7 +13,7 @@
 #' @param dbh a diameter (in mm). 
 #' @export
 
-AGBChv05W <- function (xdataset, dbh = "D4"){
+AGBChv05W <- function (xdataset, dbh = "D4",height.data=NULL,param.type=NULL){
         cdf <- xdataset
         ## Clean file 
         cdf <- CleaningCensusInfo(xdataset) 
