@@ -4,12 +4,16 @@
 \alias{AGBChv14}
 \title{Function to estimate individual biomass for forests using a pantropical model (Chave et al. 2014). Uses diameter, wood density and estimated height (based on Feldpausch et al. 2011) to estimate biomass.}
 \usage{
-AGBChv14(xdataset, dbh = "D4")
+AGBChv14(xdataset, dbh = "D4", height.data = NULL, param.type = "Best")
 }
 \arguments{
 \item{xdataset}{a dataset for estimating biomass}
 
 \item{dbh}{a diameter (in mm).}
+
+\item{height.data}{Object returned by param.merge. If NULL (default), then regional height-diameter equations are used.}
+
+\item{param.type}{Local height diameter to use. One of Best (defualt), BioRF,lusterF ... NEED TO DECIDE WHICH OF THESE TO RETURN}
 }
 \description{
 Function to estimate individual biomass using Chave et al. (2014) pantropical model (model 4).

@@ -4,12 +4,16 @@
 \alias{AGBChv05WH}
 \title{Function to estimate tree biomass for wet forests (Chave et al. 2005). Uses diameter, wood density and estimated height (based on Feldpausch et al. 2011) to estimate biomass.}
 \usage{
-AGBChv05WH(xdataset, dbh = "D4")
+AGBChv05WH(xdataset, dbh = "D4", height.data = NULL, param.type = "Best")
 }
 \arguments{
 \item{xdataset}{a dataset for estimating biomass}
 
 \item{dbh}{a diameter (in mm).}
+
+\item{height.data}{Object returned by param.merge. If NULL (default), then regional height-diameter equations are used.}
+
+\item{param.type}{Local height diameter to use. One of Best (defualt), BioRF,ClusterF ... NEED TO DECIDE WHICH OF THESE TO RETURN}
 }
 \description{
 Function to estimate tree biomass using Chave et al. (2005) equation for wet forests.

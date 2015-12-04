@@ -4,12 +4,16 @@
 \alias{AGBChv05MH}
 \title{Function to estimate tree biomass for moist forests (Chave et al. 2005).Uses diameter, wood density and estimated height (based on Feldpausch et al. 2011) to estimate biomass}
 \usage{
-AGBChv05MH(xdataset, dbh = "D4")
+AGBChv05MH(xdataset, dbh = "D4", height.data = NULL, param.type = "Best")
 }
 \arguments{
 \item{xdataset}{a dataset for estimating biomass}
 
 \item{dbh}{a diameter (in mm).}
+
+\item{height.data}{Object returned by param.merge. If NULL (default), then regional height-diameter equations are used.}
+
+\item{param.type}{local height diameter to use. One of Best (defualt), BioRF,Cluster ... NEED TO DECIDE WHICH OF THESE TO RETURN}
 }
 \description{
 Function to estimate individual biomass using the Chave equation (2005) with height for Moist forests. Tree height is estimated using Feldpausch et al. (2011) regional parameters with Weibull equation. The function adds columns with the biomass information for all alive trees. This function needs a dataset with the following information: PlotViewID, PlotID, TreeID, CensusNo, Diameter (DBH1-DBH4), Wood density (WD), Allometric RegionID.The function assumes that the diameter used is DBH4, unless other DBH is selected. See ForestPlots.net documentation for more information.

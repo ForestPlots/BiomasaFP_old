@@ -4,7 +4,7 @@
 \alias{AGBChv05W}
 \title{Function to estimate biomass of individual tree records for wet forests (Chave et al., 2005). Uses diameter and wood density to estimate biomass.}
 \usage{
-AGBChv05W(xdataset, dbh = "D4")
+AGBChv05W(xdataset, dbh = "D4", height.data = NULL, param.type = NULL)
 }
 \arguments{
 \item{xdataset}{a dataset for estimating biomass}

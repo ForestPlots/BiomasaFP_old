@@ -9,7 +9,7 @@
 #' @param xdataset a dataset for estimating biomass
 #' @param dbh a diameter (in mm). 
 #' @param height.data Object returned by param.merge. If NULL (default), then regional height-diameter equations are used.
-#' @param param.type Local height diameter to use. One of "Best" (defualt), "BioRF","ClusterF" ... NEED TO DECIDE WHICH OF THESE TO RETURN
+#' @param param.type Local height diameter to use. One of Best (defualt), BioRF,ClusterF ... NEED TO DECIDE WHICH OF THESE TO RETURN
 #' 
 #' @export
 #' @author Gabriela Lopez-Gonzalez

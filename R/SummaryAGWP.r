@@ -5,7 +5,7 @@
 #' @param dbh Name of column containing diameter data. Default is "D4".
 #' @param rec.meth Method used to estimate AGWP of recruits. If 0 (default), estimates growth from starting diameter of 0mm. If another value is provided, then growth is estimated from a starting diameter of 100mm.
 #' @param height.data Object returned by \code{param.merge}. Used to supply parameters of local allometric equations. If NULL (default), regional height diameter equations are used.
-#' @param param.type Local height diameter to use. One of "Best" (defualt), "BioRF","ClusterF" ... NEED TO DECIDE WHICH OF THESE TO RETURN. Ignored if \code{height.data=NULL}.
+#' @param param.type Local height diameter to use. One of Best (defualt), BioRF,ClusterF ... NEED TO DECIDE WHICH OF THESE TO RETURN. Ignored if \code{height.data=NULL}.
 #' @return A data frame with PlotViewID, CensusNo, and observed and unobserved elements of AGWP, stem dynamics and AGB mortality.
 #' @author Martin Sullivan, Gabriela Lopez-Gonzalez
 
@@ -171,7 +171,8 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 	SummaryB$AGWP.PlotArea.Year<-SummaryB$AGWP.PlotArea/SummaryB$Delta.time
 	
 	#Neaten up column names
-	names(SummaryB)<-c("PlotViewID","Census.No","AGB.ha","Stems.ha","AGWPrec.ha","Recruit.ha","AGBmort.ha","Mortality.ha","AGWPsurv.ha","SurvivingStems.ha","UnobsAGWPmort.ha","Mean.WD","Recruitment.stem.year","Mortality.stem.year","UnobsAGWPrec.ha","UnobsRecruits.ha","CensusInterval","AGWP.ha","AGWP.ha.year")
+	names(SummaryB)<-c("PlotViewID","Census.No","AGB.ha","Stems.ha","AGWPrec.ha","Recruit.ha","AGBmort.ha","Mortality.ha",
+	                   "AGWPsurv.ha","SurvivingStems.ha","UnobsAGWPmort.ha","Mean.WD","Recruitment.stem.year","Mortality.stem.year","UnobsAGWPrec.ha","UnobsRecruits.ha","CensusInterval","AGWP.ha","AGWP.ha.year")
         SummaryB
         
 }

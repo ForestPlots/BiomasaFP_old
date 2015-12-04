@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title></title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<!--
+
+        %\VignetteEngine{knitr::rmarkdown}
+        %\VignetteIndexEntry{An Introduction to the BiomasaFP Package}
+       
+-->
+
+<pre><code>    title: &quot;BiomasaFP Introduction Vignette&quot;
+    author: &quot;Gabriela Lopez, Martin Sullivan, Tim Baker&quot;
+    date: &quot;Sunday, February 28, 2015&quot;
+    output: html_document
+</code></pre>
+
+<hr/>
+
+<p><strong>Introduction</strong></p>
+
+<p>The BiomasaFP R package is designed to allow ForestPlots.net users to calculate plot-level summary statistics such as aboveground biomass (AGB) and stem density from the [Forest Plots database] [<a href="http://www.forestplots.net/">http://www.forestplots.net/</a>]. It also provides functions to produce standardised and cleaned plot data to facilitate any type of analysis using your data.</p>
+
+<hr/>
+
+<p><strong>Input data</strong></p>
+
+<p>Three files, downloaded from ForestPlots.net are needed as input data:<br/>
+a) Individuals csv file from the Advanced Search 
+b) Wood density file  from the query library<br/>
+c) Plot View metadata file from the query library  </p>
+
+<p>The three files should correspond to the same Plot Views.</p>
+
+<p>These files are read into R using <code>mergefp</code>, which merges the files into a standard format and performs some basic cleaning:</p>
+
+<pre><code>library(BiomasaFP)
+# reads, cleans and merges the Census data file, metadata file and wd file.
+mergedCensus &lt;- mergefp(&#39;TestDataset.csv&#39;,&#39;Metadata10nov.csv&#39;,&#39;wd10nov.csv&#39; )
+</code></pre>
+
+<p><code>mergefp</code> can also be used to merge and clean these three datasets when the have already been read into R. <code>mergefp</code> automatically checks whether each argument passed to it is a <code>data.frame</code> object, so you <strong>do not</strong> need to specify whether your arguments are dataframes or file paths. The dataset returned by <code>mergefp</code> is used as input in many of the other functions in <em>BiomasaFP</em>.</p>
+
+<hr/>
+
+<p><strong>Producing summary statistics</strong></p>
+
+<p>Once you have obtained your merged dataset using <code>mergefp</code>, you can calculate a number of summary statistics at Plot View level:  </p>
+
+<ul>
+<li>The coordinates, dates of the first and last census, and number of censuses (<code>SummaryPlotviews</code>).</li>
+<li>The number of species and individuals in each family in your data (<code>SummaryFamilies</code>).</li>
+<li>Total AGB in each census (<code>SummaryAGB</code>).</li>
+<li>Change in AGB between the first and last census (<code>AGBch</code>).</li>
+</ul>
+
+<p>These functions return dataframes indexed by PlotView ID (and Census number, where summary statistics are calculated for each census).</p>
+
+<p>The three functions that calculate AGB summary statistics (<code>SummaryAGB</code>,<code>AGBch</code> and <code>LastAGB</code>) require an equation to estimate AGB from tree diameter to be specified. Seven allometric equations are included in <em>BiomasaFP</em>; five equations from Chave et al. 2005: <code>AGBChv05DH</code> (dry forest equation including tree height), <code>AGBChv05M</code> (moist forest equation based on tree diameter), <code>AGBChv05MH</code> (moist forest equation including tree height),<code>AGBChv05W</code> (wet forest equation based on tree diameter), and <code>AGBChv05WH</code> (wet forest equation including tree height) and the Chave et al. (2014) pantropical model (model 4, &#39;AGBChv14&#39;). Where tree height is used in an equation, it is estimated based on tree diameter, using region-specific parameters for a Weibull model of the height/diameter relationship (Feldpaush et al., 2011). </p>
+
+<pre><code>#Estimate total AGB per Plot View in each census
+#Use Chave 2005 moist forest equation without height
+AGB.sum&lt;-SummaryAGB(mergedCensus,AGBChv05M)
+head(AGB.sum)
+#Repeat using Chave 2005 moist forest equation with height
+AGB.sum.height&lt;-SummaryAGB(mergedCensus,AGBChv05MH)
+head(AGB.sum.height)
+</code></pre>
+
+<p>By default, these three functions use DBH4, but this can be set by the user to be any one of DBH1, DBH2, DBH3 or DBH4.</p>
+
+<pre><code>#Default, uses DBH4
+AGB.Last&lt;-LastAGB(mergedCensus,AGBChv05M)
+head(AGB.Last)
+#Use DBH3 instead
+AGB.Last.dbh3&lt;-LastAGB(mergedCensus,AGBChv05M,&quot;DBH3&quot;)
+head(AGB.Last.dbh3)
+</code></pre>
+
+<hr/>
+
+<p><strong>Estimating tree level AGB</strong></p>
+
+<p>The allometric equations called by <code>SummaryAGB</code>,<code>AGBch</code> and <code>LastAGB</code> can also be accessed individually, and return estimates of AGB and, where height is used in the equation, the estimated height for each tree in each census. Again, these functions use DBH4 by default, but this can be changed by the user.</p>
+
+<pre><code>#Use DBH4 (default)
+tree.AGB&lt;-AGBChv05M(mergedCensus)
+head(tree.AGB)
+#Use DBH3
+tree.AGB.dbh3&lt;-AGBChv05M(mergedCensus,&quot;DBH3&quot;)
+head(tree.AGB.dbh3)
+</code></pre>
+
+<p><strong>Citation</strong></p>
+
+<p>If you use this package, please cite as:</p>
+
+<p>Lopez-Gonzalez G, Sullivan M and Baker TR (2015). BiomasaFP: Estimate biomass for data downloaded from ForestPlots.net. R package version 1.0.</p>
+
+<hr/>
+
+<p><strong>References</strong></p>
+
+<p><strong>Database</strong></p>
+
+<p>Lopez-Gonzalez G, Lewis SL, Burkitt M, Baker TR and Phillips OL (2009) ForestPlots.net Database. <a href="http://www.forestplots.net">www.forestplots.net</a>. Date of extraction <em>[dd,mm,yy]</em> </p>
+
+<p>Lopez-Gonzalez G, Lewis SL, Burkitt M and Phillips OL (2011) ForestPlots.net: a web application and research tool to manage and analyse tropical forest plot data. Journal of Vegetation Science 22: 610-613. doi: 10.1111/j.1654-1103.2011.01312.x</p>
+
+<p><strong>Biomass and height estimates</strong></p>
+
+<p>Chave C, Andalo C, Brown S, et al. (2005) Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.</p>
+
+<p>Chave J, Rejou-Mechain M, Burquez A et al. (2014) Improved allometric models to estimate the aboveground biomass of tropical trees. Global Change Biology 20: 3177-3190. doi: 10.1111/gcb.12629</p>
+
+<p>Feldpausch TR, Banin L, Phillips OL, Baker TR, Lewis SL et al. (2011) Height-diameter allometry of tropical forest trees. Biogeosciences 8 (5):1081-1106. doi:10.5194/bg-8-1081-2011.</p>
+
+<p><strong>Wood Density</strong></p>
+
+<p>Chave J, Coomes DA, Jansen S, Lewis SL, Swenson NG, Zanne AE. (2009) Towards a worldwide wood economics spectrum. Ecology Letters 12(4): 351-366. <a href="http://dx.doi.org/10.1111/j.1461-0248.2009.01285.x">http://dx.doi.org/10.1111/j.1461-0248.2009.01285.x</a></p>
+
+<p>Zanne AE, Lopez-Gonzalez G, Coomes DA, Ilic J, Jansen S, Lewis SL, Miller RB, Swenson NG, Wiemann MC, Chave J. (2009) Data from: Towards a worldwide wood economics spectrum. Dryad Digital Repository. <a href="http://dx.doi.org/10.5061/dryad.234">http://dx.doi.org/10.5061/dryad.234</a></p>
+
+</body>
+
+</html>
