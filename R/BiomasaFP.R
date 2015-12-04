@@ -248,8 +248,8 @@ CleaningCensusInfo <- function (dfmerged) {
                 #GL: Removed this statment as somehow it was breaking the code
 		#CleanA$CensusStemDied[is.na(CleanA$CensusStemDied)]<-9999  
 		#CleanA$CensusNoDead[is.na(CleanA$CensusNoDead)]<-9999                
-		#Trees that were never snapped are NA for IsSnapped - correct by changing to 0
-		CleanA$IsSnapped[is.na(CleanA$IsSnapped)]<-0
+		#Trees that were never snapped are NA for IsSnapped - correct by changing to 0. GL: reverted to old statement as all AGB functions use is.NA snapped
+		#CleanA$IsSnapped[is.na(CleanA$IsSnapped)]<-0
                 CleanA$Dead <- ifelse(CleanA$F1==0 & CleanA$CensusNoDead==CleanA$Census.No,1, 
                                       ifelse (CleanA$CensusNoDead>CleanA$Census.No,0, NA))
                 CleanA$D1_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$D1_D, NA)
@@ -259,7 +259,7 @@ CleaningCensusInfo <- function (dfmerged) {
                 
                 # Alive status is corrected for trees that are back to live
                 
-                CleanA$Alive <- ifelse(CleanA$F2==1 & is.na(CleanA$IsSnapped),1,
+                CleanA$Alive <- ifelse(CleanA$F2==1 & is.na(CleanA$IsSnapped),1, 
                                         ifelse(CleanA$CensusNoDead>CleanA$Census.No  & CleanA$IsSnapped==0,1,
                                                 ifelse(CleanA$CensusNoDead>CleanA$Census.No & CleanA$IsSnapped==1,1,
                                                         ifelse(CleanA$CensusNoDead==CleanA$Census.No & CleanA$IsSnapped==0,0,
