@@ -9,7 +9,7 @@ param.merge(data, wparm)
 \arguments{
 \item{data}{Object returned by mergefp}
 
-\item{wparm}{Object returned by \coding {fit.weib}}
+\item{wparm}{Object returned by \\coding {fit.weib}}
 }
 \description{
 Function to merge fitted parameters of Weibull height-diameter equations to tree data returned by \code{mergefp}
