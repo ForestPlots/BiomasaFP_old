@@ -116,6 +116,8 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 	interval<-tmp$Delta.time
 	tmp$rec.rate<-recruits/stems/interval
 	tmp$mort.rate<-death/stems/interval
+	tmp$rec.rate <- replace(tmp$rec.rate,is.na(tmp$rec.rate),0)													# CHANGE: added, otherwise function doesn't work as crashes on plotviews with 0 recruitment
+	tmp$mort.rate <- replace(tmp$mort.rate,is.na(tmp$mort.rate),0)	
 	#Get time weighted mean of rec and mort rates for each plot
 	a<-split(tmp,f=tmp$PlotViewID)
 	rec1<-unlist(lapply(a,function(x)as.numeric(lm(x$rec.rate~1,weights=x$Delta.time)[1])))
