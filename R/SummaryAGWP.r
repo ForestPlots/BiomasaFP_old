@@ -52,11 +52,11 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 
 	  # Find Recruits
         Recruits<- AGBData[AGBData$Recruit==1,]
-        if(rec.meth==100){
-	AGBRec <- aggregate (AGWPRec/PlotArea ~ PlotViewID + Census.No,  data = Recruits, FUN=sum )
-	}else{
+        # Removed this if statement because we need to discuss if this is necessary if(rec.meth==100){
+	#AGBRec <- aggregate (AGWPRec/PlotArea ~ PlotViewID + Census.No,  data = Recruits, FUN=sum )
+	#}else{
 	AGBRec <- aggregate (AGBind/PlotArea ~ PlotViewID + Census.No,  data = Recruits, FUN=sum )
-	}
+	#}
         colnames(AGBRec) <- c('PlotViewID','Census.No','AGBRec.PlotArea')
         IndRec <- aggregate (Recruit/PlotArea ~ PlotViewID + Census.No,  data = Recruits, FUN=sum )
      	
@@ -71,20 +71,23 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
         #merge Dead trees
         Deads <- merge(AGBDe, IndDead, by = c('PlotViewID','Census.No'),all.x=TRUE)
      
-	  # Unobserved growth of dead trees
+	# Unobserved growth of dead trees. Estimated to mid-point between last census the tree
+        #was recoded as alive and dead census.
 	  growth.rate<-SizeClassGrowth(xdataset,dbh=dbh)
+	  
 	  dead2<-merge(DeadTrees,growth.rate,by="PlotViewID",all.x=T)
-        dead2$DBH.death<-ifelse(dead2$D4_D<200,dead2$Delta.time*dead2$Class1,
-		ifelse(dead2$D4_D<400,dead2$Delta.time*dead2$Class2,
-			dead2$Delta.time*dead2$Class3))
+	  dead2$DBH.death<-ifelse(dead2$D4_D<200,(dead2$Delta.time * 0.5)*dead2$Class1,
+	                          ifelse(dead2$D4_D<400,(dead2$Delta.time * 0.5)*dead2$Class2,
+	                                 (dead2$Delta.time * 0.5)*dead2$Class3))
 	  dead2$DBH.death<-dead2$DBH.death+dead2$D4_D
-	  #Height at death
-	  dead2$Height.dead<-dead2$a_par*(1-exp(-dead2$b_par*(dead2$D4_D/10)^dead2$c_par))
+	  #Height at death considering unobserved growth
+	  #dead2$Height.dead<-dead2$a_par*(1-exp(-dead2$b_par*(dead2$D4_D/10)^dead2$c_par))
+	  dead2$Height.dead2<-dead2$a_par*(1-exp(-dead2$b_par*(dead2$DBH.death/10)^dead2$c_par))
 	  #AGB at death
 	  if(Chv14==F){
-			dead2$AGB.death2<-(0.0509*dead2$WD * ((dead2$DBH.death/10)^2)* dead2$Height.dead)/1000
+			dead2$AGB.death2<-(0.0509*dead2$WD * ((dead2$DBH.death/10)^2)* dead2$Height.dead2)/1000
 		}else{
-			dead2$AGB.death2<-(0.0673*(dead2$WD * ((dead2$DBH.death/10)^2)* dead2$Height.dead)^0.976)/1000
+			dead2$AGB.death2<-(0.0673*(dead2$WD * ((dead2$DBH.death/10)^2)* dead2$Height.dead2)^0.976)/1000
 	  }	
 	 dead2$Unobs.dead<-dead2$AGB.death2-dead2$AGBDead
 	 unobs.dead<-aggregate(Unobs.dead/PlotArea~PlotViewID + Census.No, data = dead2, FUN=sum )
@@ -118,7 +121,7 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 	tmp$mort.rate<-death/stems/interval
 	tmp$rec.rate <- replace(tmp$rec.rate,is.na(tmp$rec.rate),0)													# CHANGE: added, otherwise function doesn't work as crashes on plotviews with 0 recruitment
 	tmp$mort.rate <- replace(tmp$mort.rate,is.na(tmp$mort.rate),0)	
-	#Get time weighted mean of rec and mort rates for each plot
+	#Get time weighted mean of rec and mort rates for each plot# Check if weighted mean is necessary
 	a<-split(tmp,f=tmp$PlotViewID)
 	rec1<-unlist(lapply(a,function(x)as.numeric(lm(x$rec.rate~1,weights=x$Delta.time)[1])))
 	mort1<-unlist(lapply(a,function(x)as.numeric(lm(x$mort.rate~1,weights=x$Delta.time)[1])))
@@ -149,7 +152,8 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 		AGB.rec<-(0.0673*(WD_mean * ((100/10)^2)* height.rec)^0.976)/1000
 	}
 	#Get number of unobserved recruits
-	unobs.rec<-tmp$Delta.time*tmp$Rec.mean*tmp$Mort.mean*tmp$PrevStems
+	unobs.rec<-tmp$Delta.time*tmp$Rec.mean*tmp$Mort.mean*tmp$Alive.PlotArea
+	#unobs.rec<-tmp$Delta.time*tmp$Rec.mean*tmp$Mort.mean*tmp$PrevStems
 	#Get growth of unobs recruits
 	#Option for recruits starting at 100
 	if(rec.meth==100){

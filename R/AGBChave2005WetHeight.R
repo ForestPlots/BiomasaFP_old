@@ -45,7 +45,7 @@ AGBChv05WH <- function (xdataset, dbh = "D4",height.data=NULL,param.type="Best")
         cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)
         cdf$AGBDead <-ifelse(cdf$CensusStemDied==cdf$Census.No,
-                             0.0776 *(cdf$WD * (cdf[,dbh_d]/10)^2* cdf$HtFd)^0.940/1000
+                             0.0776 *(cdf$WD * (cdf[,dbh_d]/10)^2* cdf$HtFd)^0.940/1000 ()
                              , NA)
         
         cdf  
