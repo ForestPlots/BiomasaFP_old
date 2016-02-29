@@ -5,7 +5,8 @@
 #' @param dbh Name of column containing diameter data. Default is "D4".
 #' @param rec.meth Method used to estimate AGWP of recruits. If 0 (default), estimates growth from starting diameter of 0mm. If another value is provided, then growth is estimated from a starting diameter of 100mm.
 #' @param height.data Object returned by \code{param.merge}. Used to supply parameters of local allometric equations. If NULL (default), regional height diameter equations are used.
-#' @param param.type Local height diameter to use. One of "Best" (defualt), "BioRF","ClusterF" ... NEED TO DECIDE WHICH OF THESE TO RETURN. Ignored if \code{height.data=NULL}.
+#' @param param.type Local height diameter to use. One of "Best" (defualt), "ClusterF","BioRF" or "Continent_T". Ignored if \code{height.data=NULL}.
+#' @param palm.eq Logical. If TRUE the family level diameter based equation from Goodman et al 2013 is used to estimate AGB of monocots. Otherwise AGB of monocots is estimated using the allometric equation supplied to \code{AGBEquation}.
 #' @return A data frame with PlotViewID, CensusNo, and observed and unobserved elements of AGWP, stem dynamics and AGB mortality.
 #' @author Martin Sullivan, Gabriela Lopez-Gonzalez
 
@@ -14,8 +15,8 @@
 
 
 
-#Need to add palm equation element (palm.eq=TRUE)
-SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data=NULL,param.type="Best"){
+
+SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data=NULL,param.type="Best",palm.eq=TRUE){
 	#Use AGBEquation to set Chv14 argument
 	if(all.equal(AGBEquation,AGBChv14)==TRUE){
 		Chv14=TRUE
@@ -24,6 +25,10 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 	}
 
         AGBData <- AGBEquation (xdataset, dbh,height.data=height.data,param.type=param.type) 
+	if(palm.eq==TRUE){
+		AGBData[AGBData$Monocot==1,]$AGBind<-GoodmanPalm(AGBData[AGBData$Monocot==1,],dbh=dbh)
+		AGBData[AGBData$Monocot==1,]$AGBDead<-GoodmanPalm(AGBData[AGBData$Monocot==1,],dbh=paste(dbh,"_D",sep=""))
+	}
 	  IndAL <- aggregate (Alive/PlotArea ~ PlotViewID + Census.No,  data = AGBData, FUN=sum )
         AGBAlive <-aggregate (AGBind/PlotArea ~ PlotViewID + Census.No, data = AGBData, FUN=sum ) 
 	  AGBData$Census.prev<-AGBData[match(paste(AGBData$TreeID,AGBData$Census.No-1),paste(AGBData$TreeID,AGBData$Census.No)),"Census.Mean.Date"]
@@ -36,7 +41,12 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 			AGBData$AGB.100<-(0.0509*AGBData$WD * ((100/10)^2)* Height100)/1000
 		}else{
 			AGBData$AGB.100<-(0.0673*(AGBData$WD * ((100/10)^2)* Height100)^0.976)/1000
-	  }		
+	  }	
+	if(palm.eq==TRUE){
+			if(length(AGBData[AGBData$Monocot==1,]$AGB.100)>0){
+				AGBData[AGBData$Monocot==1,]$AGB.100<-exp(-3.3488+(2.7483*log(10)))/1000
+			}
+	}
 	  AGBData$AGWPRec<-AGBData$AGBind-AGBData$AGB.100
 
 	  #Calculate growth of surviving trees
@@ -74,18 +84,22 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 	  # Unobserved growth of dead trees
 	  growth.rate<-SizeClassGrowth(xdataset,dbh=dbh)
 	  dead2<-merge(DeadTrees,growth.rate,by="PlotViewID",all.x=T)
-        dead2$DBH.death<-ifelse(dead2$D4_D<200,dead2$Delta.time*dead2$Class1,
-		ifelse(dead2$D4_D<400,dead2$Delta.time*dead2$Class2,
+        dead2$DBH.death<-ifelse(dead2[,paste(dbh,"_D",sep="")]<200,dead2$Delta.time*dead2$Class1,
+		ifelse(dead2[,paste(dbh,"_D",sep="")]<400,dead2$Delta.time*dead2$Class2,
 			dead2$Delta.time*dead2$Class3))
-	  dead2$DBH.death<-dead2$DBH.death+dead2$D4_D
+	  dead2$DBH.death<-dead2$DBH.death+dead2[,paste(dbh,"_D",sep="")]
 	  #Height at death
-	  dead2$Height.dead<-dead2$a_par*(1-exp(-dead2$b_par*(dead2$D4_D/10)^dead2$c_par))
+	  dead2$Height.dead<-dead2$a_par*(1-exp(-dead2$b_par*(dead2[,paste(dbh,"_D",sep="")]/10)^dead2$c_par))
 	  #AGB at death
 	  if(Chv14==F){
 			dead2$AGB.death2<-(0.0509*dead2$WD * ((dead2$DBH.death/10)^2)* dead2$Height.dead)/1000
 		}else{
 			dead2$AGB.death2<-(0.0673*(dead2$WD * ((dead2$DBH.death/10)^2)* dead2$Height.dead)^0.976)/1000
-	  }	
+	  }
+	dead2<-dead2[!is.na(dead2$Monocot),]	
+	 if(palm.eq==TRUE){
+		dead2$AGB.death2[dead2$Monocot==1]<-GoodmanPalm(dead2[dead2$Monocot==1,],paste(dbh,"_D",sep=""))
+		}
 	 dead2$Unobs.dead<-dead2$AGB.death2-dead2$AGBDead
 	 unobs.dead<-aggregate(Unobs.dead/PlotArea~PlotViewID + Census.No, data = dead2, FUN=sum )
         	
@@ -174,7 +188,23 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 	
 	#Neaten up column names
 	names(SummaryB)<-c("PlotViewID","Census.No","AGB.ha","Stems.ha","AGWPrec.ha","Recruit.ha","AGBmort.ha","Mortality.ha","AGWPsurv.ha","SurvivingStems.ha","UnobsAGWPmort.ha","Mean.WD","Recruitment.stem.year","Mortality.stem.year","UnobsAGWPrec.ha","UnobsRecruits.ha","CensusInterval","AGWP.ha","AGWP.ha.year")
-        SummaryB
         
+	#Extract recruitment of monocots in each census
+	if(sum(Recruits$Monocot)>0){
+	if(rec.meth==100){
+		palm.rec<-aggregate(AGWPRec/PlotArea ~ PlotViewID+Census.No,data=Recruits[Recruits$Monocot==1,],FUN=sum)
+	}else{
+		palm.rec<-aggregate(AGBind/PlotArea ~ PlotViewID+Census.No,data=Recruits[Recruits$Monocot==1,],FUN=sum)
+	}
+	names(palm.rec)[3]<-"MonocotRecruits.ha"
+	SummaryB<-merge(SummaryB,palm.rec,by = c('PlotViewID','Census.No'),all.x=T)
+	}
+	if(sum(AGBData$Monocot)>0){
+	#Mortality of monocots in each census
+	palm.dead <-aggregate (AGBDead/PlotArea ~  PlotViewID + Census.No, data = AGBData[AGBData$Monocot==1,], FUN=sum )
+	names(palm.dead)[3]<-"MonocotMortality.ha"
+	SummaryB<-merge(SummaryB,palm.dead,by = c('PlotViewID','Census.No'),all.x=T)
+	}        
+	SummaryB	
 }
 

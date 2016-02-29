@@ -1,13 +1,14 @@
 #' @title Function to fit height-diamter models
 #' @description Function for fitting height-diameter Weibull models by non-linear least squares
 #' @param data Object returned by mergefp
+#' @param dbh Name of column containing diameter data to be used to train models. Default is "D4".
 #' @param return.mods Logical. If TRUE, full model fits are returned. Otherwise (default) only the fitted coefficents are returned. 
 #' @return A data frame with PlotViewID and fitted parameters of Weibull models at each level. 
 #' @author Martin Sullivan, Gabriela Lopez-Gonzalez
 
 #' @export
 
-fit.weib<-function(data,return.mods=FALSE){
+fit.weib<-function(data,dbh="D4",return.mods=FALSE){
 
 #CHANGE COLUMN NAMES FOR BACKCOMPATABILITY
 data$EdaphicHeightCode<-data$ForestEdaphicHeightID
@@ -40,11 +41,14 @@ TreesHt <- TreesHt[ grepl('b',TreesHt$F1)==FALSE & grepl('c',TreesHt$F1)==FALSE 
 #Exclude treeswith method 1
 TreesHt <- TreesHt[!(TreesHt$Method==1),]
 
+#Make column with diameter to use in model fitting
+TreesHt$Diameter<-TreesHt[,dbh]
+
 ###1,ContinentData## 
-HtCont<- TreesHt[,c('Continent','PlotID','Height','D1')]
+HtCont<- TreesHt[,c('Continent','PlotID','Height','Diameter')]
 
 library (nlme)
-weib1 <- nlsList (Height ~ a*(1-exp(-b*(D1/10)^c))|Continent,
+weib1 <- nlsList (Height ~ a*(1-exp(-b*(Diameter/10)^c))|Continent,
                   data=HtCont,
                   na.action=na.omit,
                   start = c(a=25, b= 0.05, c= 0.7),
@@ -59,12 +63,12 @@ ContinentCoef$Continent = rownames(ContinentCoef)
 rm(HtCont)
 
 #2. ContinentData and Forest Type
-HtCont_Type<- (TreesHt[,c('Continent','ForestMoistureID', 'EdaphicHeightCode', 'ElevationHeightCode','Height','D1')])
+HtCont_Type<- (TreesHt[,c('Continent','ForestMoistureID', 'EdaphicHeightCode', 'ElevationHeightCode','Height','Diameter')])
 good<-complete.cases(HtCont_Type)
 HtCont_Typea<-HtCont_Type[good,]
 #head(HtCont_Typea)
 
-weib2 <- nlsList (Height ~ a*(1-exp(-b*(D1/10)^c))|Continent/ForestMoistureID/EdaphicHeightCode/ElevationHeightCode,
+weib2 <- nlsList (Height ~ a*(1-exp(-b*(Diameter/10)^c))|Continent/ForestMoistureID/EdaphicHeightCode/ElevationHeightCode,
                   data=HtCont_Typea,
                   na.action=na.omit,
                   start = c(a=25, b= 0.05, c= 0.7),
@@ -87,22 +91,22 @@ rm(HtCont_Type)
 
 #3. Biogeographic Region
 
-HtBiogeo<- TreesHt[,c('Continent','Country','BiogeographicalRegionID', 'PlotID','Height','D1')]
-weib3 <- nlsList (Height ~ a*(1-exp(-b*(D1/10)^c))|'BiogeographicalRegionID',
-                  data=HtBiogeo,
-                  na.action=na.omit,
-                  start = c(a=25, b= 0.05, c= 0.7),
-                  pool=FALSE)
+#HtBiogeo<- TreesHt[,c('Continent','Country','BiogeographicalRegionID', 'PlotID','Height','Diameter')]
+#weib3 <- nlsList (Height ~ a*(1-exp(-b*(Diameter/10)^c))|'BiogeographicalRegionID',
+#                  data=HtBiogeo,
+#                  na.action=na.omit,
+#                  start = c(a=25, b= 0.05, c= 0.7),
+#                  pool=FALSE)
 #summary(weib3)
-BioRCoef<-data.frame(coef(weib3))
-colnames(BioRCoef) <- c('a_BioR','b_BioR', 'c_BioR')
-BioRCoef$BiogeographicalRegionID = rownames(BioRCoef)
+#BioRCoef<-data.frame(coef(weib3))
+#colnames(BioRCoef) <- c('a_BioR','b_BioR', 'c_BioR')
+#BioRCoef$BiogeographicalRegionID = rownames(BioRCoef)
 
-rm(HtBiogeo)
+#rm(HtBiogeo)
 
 #4. Biogeographic Region/ForestType
-HtBiogeoFt<- TreesHt[,c('Continent','Country','BiogeographicalRegionID', 'PlotID','ForestMoistureID', 'EdaphicHeightCode', 'ElevationHeightCode','Height','D1')]
-weib4 <- nlsList (Height ~ a*(1-exp(-b*(D1/10)^c))|BiogeographicalRegionID/ForestMoistureID/EdaphicHeightCode/ElevationHeightCode,
+HtBiogeoFt<- TreesHt[,c('Continent','Country','BiogeographicalRegionID', 'PlotID','ForestMoistureID', 'EdaphicHeightCode', 'ElevationHeightCode','Height','Diameter')]
+weib4 <- nlsList (Height ~ a*(1-exp(-b*(Diameter/10)^c))|BiogeographicalRegionID/ForestMoistureID/EdaphicHeightCode/ElevationHeightCode,
                   data=HtBiogeoFt,
                   na.action=na.omit,
                   start = c(a=25, b= 0.05, c= 0.7),
@@ -120,9 +124,9 @@ BioRCoefFt$ElevationHeightCode<-unlist(lapply(strsplit(BioRCoefFt$BioRCoefFtype,
 rm(HtBiogeoFt)
 
 ##5 Analyze data by country
-HtCountry<- TreesHt[,c('Continent','Country', 'PlotID','Height','D1')]
+HtCountry<- TreesHt[,c('Continent','Country', 'PlotID','Height','Diameter')]
 #library (nlme)
-weib5 <- nlsList (Height ~ a*(1-exp(-b*(D1/10)^c))|Country,
+weib5 <- nlsList (Height ~ a*(1-exp(-b*(Diameter/10)^c))|Country,
                   data=HtCountry,
                   na.action=na.omit,
                   start = c(a=25, b= 0.05, c= 0.7),
@@ -135,50 +139,50 @@ CountryCoef$Country = rownames(CountryCoef)
 rm(HtCountry)
 
 ##6 Analyze data by countryand ForestType
-HtCountryF<- TreesHt[,c('Continent','Country', 'PlotID','ForestMoistureID', 'EdaphicHeightCode', 'ElevationHeightCode','Height','D1')]
+#HtCountryF<- TreesHt[,c('Continent','Country', 'PlotID','ForestMoistureID', 'EdaphicHeightCode', 'ElevationHeightCode','Height','Diameter')]
 #library (nlme)
-weib6 <- nlsList (Height ~ a*(1-exp(-b*(D1/10)^c))|Country/ForestMoistureID/EdaphicHeightCode/ElevationHeightCode,
-                  data=HtCountryF,
-                  na.action=na.omit,
-                  start = c(a=25, b= 0.05, c= 0.7),
-                  pool=FALSE)
+#weib6 <- nlsList (Height ~ a*(1-exp(-b*(Diameter/10)^c))|Country/ForestMoistureID/EdaphicHeightCode/ElevationHeightCode,
+#                  data=HtCountryF,
+#                  na.action=na.omit,
+#                  start = c(a=25, b= 0.05, c= 0.7),
+#                  pool=FALSE)
 #summary(weib6)
 
-HtCountryFt<-data.frame(coef(weib6))
-colnames(HtCountryFt) <- c('a_CountryF','b_CountryF', 'c_CountryF')
-HtCountryFt$HtCountryFtypw = rownames(HtCountryFt)
+#HtCountryFt<-data.frame(coef(weib6))
+#colnames(HtCountryFt) <- c('a_CountryF','b_CountryF', 'c_CountryF')
+#HtCountryFt$HtCountryFtypw = rownames(HtCountryFt)
 
-HtCountryFt$Country<-unlist(lapply(strsplit(HtCountryFt$HtCountryFtypw, "/"),"[", 1))
-HtCountryFt$ForestMoistureID<-unlist(lapply(strsplit(HtCountryFt$HtCountryFtypw, "/"),"[", 2))
-HtCountryFt$EdaphicHeightCode<-unlist(lapply(strsplit(HtCountryFt$HtCountryFtypw, "/"),"[", 3))
-HtCountryFt$ElevationHeightCode<-unlist(lapply(strsplit(HtCountryFt$HtCountryFtypw, "/"),"[", 4))
+#HtCountryFt$Country<-unlist(lapply(strsplit(HtCountryFt$HtCountryFtypw, "/"),"[", 1))
+#HtCountryFt$ForestMoistureID<-unlist(lapply(strsplit(HtCountryFt$HtCountryFtypw, "/"),"[", 2))
+#HtCountryFt$EdaphicHeightCode<-unlist(lapply(strsplit(HtCountryFt$HtCountryFtypw, "/"),"[", 3))
+#HtCountryFt$ElevationHeightCode<-unlist(lapply(strsplit(HtCountryFt$HtCountryFtypw, "/"),"[", 4))
 
-rm(HtCountryF)
+#rm(HtCountryF)
 
 #7.Analyze data by clusterid
-HtCluster<- (TreesHt[,c('ClusterID','Height','D1')])
-goodCl<-complete.cases(HtCluster)
-HtClusterA<-HtCluster[goodCl,]
+#HtCluster<- (TreesHt[,c('ClusterID','Height','Diameter')])
+#goodCl<-complete.cases(HtCluster)
+#HtClusterA<-HtCluster[goodCl,]
 
-weib7 <- nlsList (Height ~ a*(1-exp(-b*(D1/10)^c))|ClusterID,
-                  data=HtClusterA,
-                  na.action=na.omit,
-                  start = c(a=25, b= 0.05, c= 0.7),
-                  pool=FALSE)
+#weib7 <- nlsList (Height ~ a*(1-exp(-b*(Diameter/10)^c))|ClusterID,
+#                  data=HtClusterA,
+#                  na.action=na.omit,
+#                  start = c(a=25, b= 0.05, c= 0.7),
+#                  pool=FALSE)
 
 
-ClusterCoef<-data.frame(coef(weib7))
-colnames(ClusterCoef) <- c('a_Cluster','b_Cluster', 'c_Cluster')
-ClusterCoef$ClusterID = rownames(ClusterCoef)
+#ClusterCoef<-data.frame(coef(weib7))
+#colnames(ClusterCoef) <- c('a_Cluster','b_Cluster', 'c_Cluster')
+#ClusterCoef$ClusterID = rownames(ClusterCoef)
 
-rm(HtCluster)
+#rm(HtCluster)
 
 #8. Cluster id and ForestType
-HtClusterFt <- TreesHt[,c('ClusterID','ForestMoistureID', 'EdaphicHeightCode', 'ElevationHeightCode','Height','D1')]
+HtClusterFt <- TreesHt[,c('ClusterID','ForestMoistureID', 'EdaphicHeightCode', 'ElevationHeightCode','Height','Diameter')]
 goodClFt<-complete.cases(HtClusterFt)
 HtClusterFtA<-HtClusterFt[goodClFt,]
 
-weib8 <- nlsList (Height ~ a*(1-exp(-b*(D1/10)^c))| ClusterID/ForestMoistureID/EdaphicHeightCode/ElevationHeightCode,
+weib8 <- nlsList (Height ~ a*(1-exp(-b*(Diameter/10)^c))| ClusterID/ForestMoistureID/EdaphicHeightCode/ElevationHeightCode,
                   data=HtClusterFtA,
                   na.action=na.omit,
                   start = c(a=25, b= 0.05, c= 0.7),
@@ -195,8 +199,8 @@ ClusterFCoef$ElevationHeightCode<-unlist(lapply(strsplit(ClusterFCoef$ClusterF, 
 rm(HtClusterFt,HtClusterFtA)
 
 #Analyze data by  plot
-HtPlot<- TreesHt[,c('PlotID','Height','D1')]
-weib9 <- nlsList (Height ~ a*(1-exp(-b*(D1/10)^c))| PlotID,
+HtPlot<- TreesHt[,c('PlotID','Height','Diameter')]
+weib9 <- nlsList (Height ~ a*(1-exp(-b*(Diameter/10)^c))| PlotID,
                   data=HtPlot,
                   na.action=na.omit,
                   start = c(a =25, b= 0.05, c= 0.7),
@@ -217,23 +221,27 @@ Ht2 <- merge(Ht1,ClusterFCoef, by=c('ClusterID','ForestMoistureID','EdaphicHeigh
 
 
 # CLUSTER
-Ht3<- merge(Ht2, ClusterCoef, by='ClusterID', all.x=TRUE)
+#Ht3<- merge(Ht2, ClusterCoef, by='ClusterID', all.x=TRUE)
 
 #Country/ForestType
-Ht4 <- merge(Ht3,HtCountryFt, by=c('Country','ForestMoistureID','EdaphicHeightCode', 'ElevationHeightCode'), all.x=TRUE)
+#Ht4 <- merge(Ht3,HtCountryFt, by=c('Country','ForestMoistureID','EdaphicHeightCode', 'ElevationHeightCode'), all.x=TRUE)
 
 #Country
-Ht5 <- merge(Ht4,CountryCoef, by='Country', all.x=TRUE)
+#Ht5 <- merge(Ht4,CountryCoef, by='Country', all.x=TRUE)
 
 #Biogeographic region and Forest type
-Ht6<- merge (Ht5,BioRCoefFt, by=c('BiogeographicalRegionID','ForestMoistureID','EdaphicHeightCode', 'ElevationHeightCode'), all.x=TRUE)
+#Ht6<- merge (Ht5,BioRCoefFt, by=c('BiogeographicalRegionID','ForestMoistureID','EdaphicHeightCode', 'ElevationHeightCode'), all.x=TRUE)
+Ht6<- merge (Ht2,BioRCoefFt, by=c('BiogeographicalRegionID','ForestMoistureID','EdaphicHeightCode', 'ElevationHeightCode'), all.x=TRUE)
+
 
 #Biogeographic region 
-Ht7<- merge (Ht6,BioRCoef, by='BiogeographicalRegionID', all.x=TRUE)
+#Ht7<- merge (Ht6,BioRCoef, by='BiogeographicalRegionID', all.x=TRUE)
 
 #Continent and ForestType
 
-Ht8<- merge (Ht7,ContinentCoef_Type, by=c('Continent','ForestMoistureID','EdaphicHeightCode', 'ElevationHeightCode'), all.x=TRUE)
+#Ht8<- merge (Ht7,ContinentCoef_Type, by=c('Continent','ForestMoistureID','EdaphicHeightCode', 'ElevationHeightCode'), all.x=TRUE)
+Ht8<- merge (Ht6,ContinentCoef_Type, by=c('Continent','ForestMoistureID','EdaphicHeightCode', 'ElevationHeightCode'), all.x=TRUE)
+
 
 #Continent
 Ht9 <- merge(Ht8, ContinentCoef, by='Continent', all.x=TRUE)
