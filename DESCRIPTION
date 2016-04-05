@@ -6,10 +6,12 @@ Date: 2015-10-23
 Author: Gabriela Lopez-Gonzalez, Martin Sullivan, Tim Baker
 Maintainer: Gabriela Lopez-Gonzalez <admin@forestplots.net>
 Description: Tools for analysing data downloaded from ForestPlots.net. This
-    package includes functions for: a) estimating above ground biomass (AGB)
-    from forest inventory data and b) producing summary statistics for each plot and census. 
+    package includes functions for: a) estimating above ground biomass (AGB) from
+    forest inventory data and b) producing summary statistics for each plot and
+    census.
 Suggests:
     knitr
 VignetteBuilder: knitr
 License: GPL-3
 LazyData: true
+RoxygenNote: 5.0.1

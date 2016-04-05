@@ -57,6 +57,7 @@ mergefp <- function (a,b,d) {
         RNAS$GenusID <- as.numeric(RNAS$GenusID)
         RNAS$SpeciesID <- as.numeric(RNAS$SpeciesID)
         RNAS$D1<- as.numeric(gsub("=","",RNAS$D1))
+        RNAS$DPOMtMinus1<- as.numeric(gsub("=","",RNAS$DPOMtMinus1))
         RNAS$D2<- as.numeric(gsub("=","",RNAS$D2))
         RNAS$D3<- as.numeric(gsub("=","",RNAS$D3))
         RNAS$D4<- as.numeric(gsub("=","",RNAS$D4))
@@ -76,7 +77,7 @@ mergefp <- function (a,b,d) {
         RNASu <- RNAS[,c('PlotID','Plot.Code','Country','Census.Mean.Date',
                          'Census.No','PlotViewID','TreeID','FamilyAPGID',
                          'Family','GenusID','Genus','SpeciesID','Species',
-                         'D1','D2','D3','D4','POM','F1','F2',
+                         'D1','DPOMtMinus1','D2','D3','D4','POM','F1','F2',
                          'F3','F4','Height','F5', 'CI','LI'
         )]
         #extract unique elements, Unique dataset for census data
@@ -138,7 +139,7 @@ mergefp <- function (a,b,d) {
         datasetc <- datasetb[,c('Continent', 'Country', 'PlotID', 'PlotCode'
                                 ,'PlotViewID','LatitudeDecimal','LongitudeDecimal','Altitude','PlotArea',
                                 'TreeID','FamilyAPGID','Family','GenusID','Genus','SpeciesID','Species', 'Census.No', 'Census.Mean.Date',
-                                'D1','D2','D3','D4','POM','F1','F2','F3','F4','Height','F5','LI','CI','WD',
+                                'D1','DPOMtMinus1','D2','D3','D4','POM','F1','F2','F3','F4','Height','F5','LI','CI','WD',
                                 'AllometricRegionID',
                                 'ClusterID', 
                                 'ForestMoistureID','ForestEdaphicID',
@@ -276,7 +277,7 @@ CleaningCensusInfo <- function (dfmerged) {
                                       'TreeID',	'FamilyAPGID',	'Family',	
                                       'GenusID', 'Genus', 'SpeciesID',	'Species',	
                                       'Census.No', 'Census.Mean.Date',	
-                                      'D1', 'D2', 'D3',	'D4', 'POM', 'F1', 'F2',
+                                      'D1', 'DPOMtMinus1', 'D2', 'D3',	'D4', 'POM', 'F1', 'F2',
                                       'F3', 'F4', 'Height', 'F5', 'LI',	'CI',
                                       'WD', 'AllometricRegionID', 'ClusterID',
                                       'ForestMoistureID', 'ForestEdaphicID',
@@ -285,7 +286,7 @@ CleaningCensusInfo <- function (dfmerged) {
                                       'Monocot', 'PomChange',  'Alive','Snapped' ,'Recruit','CensusStemDied','Dead','D1_D','D2_D','D3_D','D4_D','IsSnapped'
                 )]
                 # Discuss if this version should be implemented with all the subplot and t1 information
-                #Clean <- CleanA[ , c('TreeID','PlotViewID','ContinentName','CountryID','CountryName','AllometricRegionID','PlotID','PlotCode','PlotViewPlotCensusID','CensusNo','MeanDecimalDate', 'Subplot_Standard','x_standard','y_standard','SubPlotT1','SubPlotT2','x','y','FamilyAPGID','FamilyAPGName','GenusID','GenusName','SpeciesID','FullSpeciesName',        'TagNumber','DBH1','DBH2','DBH3','DBH4','POM','Flag1','Flag2','Flag3','Flag4','CI','LI','Alive','NewRecruit','POMChange','AliveNormal',  'MultipleStem',        'Snapped','WD','CensusStemDied','Dead','DBH1_D','DBH2_D','DBH3_D','DBH4_D','Altitude','LatitudeDecimal', 'LongitudeDecimal','PlotArea')]
+                #Clean <- CleanA[ , c('TreeID','PlotViewID','ContinentName','CountryID','CountryName','AllometricRegionID','PlotID','PlotCode','PlotViewPlotCensusID','CensusNo','MeanDecimalDate', 'Subplot_Standard','x_standard','y_standard','SubPlotT1','SubPlotT2','x','y','FamilyAPGID','FamilyAPGName','GenusID','GenusName','SpeciesID','FullSpeciesName',        'TagNumber','DBH1','DPOMtMinus1',DBH2','DBH3','DBH4','POM','Flag1','Flag2','Flag3','Flag4','CI','LI','Alive','NewRecruit','POMChange','AliveNormal',  'MultipleStem',        'Snapped','WD','CensusStemDied','Dead','DBH1_D','DBH2_D','DBH3_D','DBH4_D','Altitude','LatitudeDecimal', 'LongitudeDecimal','PlotArea')]
                 
                 Clean
         }
