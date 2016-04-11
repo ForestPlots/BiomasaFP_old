@@ -200,6 +200,7 @@ CleaningCensusInfo <- function (dfmerged) {
                 Clean$D2_D <- NA
                 Clean$D3_D <- NA
                 Clean$D4_D <- NA
+                Clean$IsSnapped <-NA## just added GL
                 Clean
         }
         
