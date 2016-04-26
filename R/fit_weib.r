@@ -1,5 +1,5 @@
 #' @title Function to fit height-diamter models
-#' @description Function for fitting height-diameter Weibull models by non-linear least squares
+#' @description Function for fitting height-diameter Weibull models by non-linear least squares. Depricated.
 #' @param data Object returned by mergefp
 #' @param dbh Name of column containing diameter data to be used to train models. Default is "D4".
 #' @param return.mods Logical. If TRUE, full model fits are returned. Otherwise (default) only the fitted coefficents are returned. 

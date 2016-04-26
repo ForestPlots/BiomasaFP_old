@@ -11,4 +11,6 @@ GoodmanPalm<-function(data,dbh="D4"){
 	ln.AGB<--3.3488+(2.7483*log(data[,dbh]/10))
 	return((exp(ln.AGB))/1000)
 }
+
+
 	

@@ -4,8 +4,8 @@
 #' @param AGBEquation Allometric equation function to use when estimating AGB.Note only \code{AGBChv14} and \code{AGBChv05MH} are fully implemented, other Chave 2005 equations can by used for observed components by unobserved components will use \code{AGBChv05MH}. Plan to implement other equations fully in future.
 #' @param dbh Name of column containing diameter data. Default is "D4".
 #' @param rec.meth Method used to estimate AGWP of recruits. If 0 (default), estimates growth from starting diameter of 0mm. If another value is provided, then growth is estimated from a starting diameter of 100mm.
-#' @param height.data Object returned by \code{param.merge}. Used to supply parameters of local allometric equations. If NULL (default), regional height diameter equations are used.
-#' @param param.type Local height diameter to use. One of "Best" (defualt), "ClusterF","BioRF" or "Continent_T". Ignored if \code{height.data=NULL}.
+#' @param height.data Object returned by \code{local.heights}. Used to supply parameters of local allometric equations. If NULL (default), regional height diameter equations are used.
+#' @param param.type Local height diameter to use. One of "Best" (defualt), "ClusterF","BioRF" or "ContinentF". Ignored if \code{height.data=NULL}.
 #' @param palm.eq Logical. If TRUE the family level diameter based equation from Goodman et al 2013 is used to estimate AGB of monocots. Otherwise AGB of monocots is estimated using the allometric equation supplied to \code{AGBEquation}.
 #' @return A data frame with PlotViewID, CensusNo, and observed and unobserved elements of AGWP, stem dynamics and AGB mortality.
 #' @author Martin Sullivan, Gabriela Lopez-Gonzalez
@@ -36,7 +36,7 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 
 
 	  #Estimate AGB of recruits at 100mm
-	  Height100<-AGBData$a_par*(1-exp(-AGBData$b_par*(100/10)^AGBData$c_par))
+	  Height100<-height.mod(100,AGBData$a_par,AGBData$b_par,AGBData$c_par)
 	  if(Chv14==F){
 			AGBData$AGB.100<-(0.0509*AGBData$WD * ((100/10)^2)* Height100)/1000
 		}else{
@@ -89,7 +89,7 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 			dead2$Delta.time*dead2$Class3))
 	  dead2$DBH.death<-dead2$DBH.death+dead2[,paste(dbh,"_D",sep="")]
 	  #Height at death
-	  dead2$Height.dead<-dead2$a_par*(1-exp(-dead2$b_par*(dead2[,paste(dbh,"_D",sep="")]/10)^dead2$c_par))
+	  dead2$Height.dead<-height.mod(dead2[,paste(dbh,"_D",sep="")],dead2$a_par,dead2$b_par,dead2$c_par)
 	  #AGB at death
 	  if(Chv14==F){
 			dead2$AGB.death2<-(0.0509*dead2$WD * ((dead2$DBH.death/10)^2)* dead2$Height.dead)/1000
@@ -134,8 +134,8 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 	tmp$mort.rate <- replace(tmp$mort.rate,is.na(tmp$mort.rate),0)	
 	#Get time weighted mean of rec and mort rates for each plot
 	a<-split(tmp,f=tmp$PlotViewID)
-	rec1<-unlist(lapply(a,function(x)as.numeric(lm(x$rec.rate~1,weights=x$Delta.time)[1])))
-	mort1<-unlist(lapply(a,function(x)as.numeric(lm(x$mort.rate~1,weights=x$Delta.time)[1])))
+	rec1<-unlist(lapply(a,function(x)ifelse(nrow(x)>1,as.numeric(lm(x$rec.rate~1,weights=x$Delta.time)[1]),NA)))
+	mort1<-unlist(lapply(a,function(x)ifelse(nrow(x)>1,as.numeric(lm(x$mort.rate~1,weights=x$Delta.time)[1]),NA)))
 	rec.means<-data.frame("PlotViewID"=names(rec1),"Rec.mean"=as.numeric(rec1),stringsAsFactors=F)
 	mort.means<-data.frame("PlotViewID"=names(mort1),"Mort.mean"=as.numeric(mort1),stringsAsFactors=F)
 	plot.means<-merge(rec.means,mort.means,by="PlotViewID",all.x=T)
@@ -145,9 +145,9 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
 	#D at death
 	D.death<-100+unobs.D
 	#Get height at death
-	height.death<-tmp$a_par*(1-exp(-tmp$b_par*(D.death/10)^tmp$c_par))
+	height.death<-height.mod(D.death,tmp$a_par,tmp$b_par,tmp$c_par)
 	#Height at point of recruitment
-	height.rec<-tmp$a_par*(1-exp(-tmp$b_par*(100/10)^tmp$c_par))
+	height.rec<-height.mod(100,tmp$a_par,tmp$b_par,tmp$c_par)
 	#WD_mean<-tmp$MeanWD # Commented out - mean across all censuses
 	WD_mean<-tmp$WD # Use mean in plot and census
 	#Estimate AGB at death

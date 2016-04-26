@@ -1,0 +1,22 @@
+#' @title hd.fit
+#' @description Fit height-diameter models for each level in a dataset. This is a wrapper for \code{fit.weib.models}.
+#' @param htdata Dataframe containing height measurements.
+#' @param level Level to fit height-diameter model. One of "Plot", "Cluster", "BioR" and "Continent".
+#' @param weib.only Logical. Should the search for the best model be constrained to Weibull models. If TRUE, log-log models are only selected when neither Weibull models converge. Default is FALSE.
+#' @return Dataframe with estimated parameters, number of height measurments used to fit the models and the error at estimating AGB compared to AGB estimates using observed heights (in units of Mg per tree). Parameters of the 'best' model (i.e. lowest AGB prediction error) are also given.
+#' @author Martin Sullivan
+
+#' @export
+
+hd.fit<-function(htdata,level,weib.only=FALSE){
+htdata$level<-level
+htdata$FT<-paste(htdata$ForestMoistureID,htdata$ForestEdaphicHeightID,htdata$ForestElevationHeightID,sep="")
+htdata$ID<-ifelse(htdata$level=="Plot",htdata$PlotID,ifelse(htdata$level=="Cluster",paste(htdata$ClusterID,htdata$FT,sep="_"),ifelse(htdata$level=="BioR",paste(htdata$BiogeographicalRegionID,htdata$FT,sep="_"),paste(htdata$Continent,htdata$FT,sep="_"))))
+htdata2<-split(htdata,f=htdata$ID)
+a<-lapply(htdata2,fit.weib.models,weib.only=weib.only)
+b<-do.call(rbind,a)
+id.vec<-rownames(b)
+b<-data.frame(b)
+b$ID<-id.vec
+return(b)
+}

@@ -1,4 +1,4 @@
-#' @title Merge fitted height-diameter parameters with tree by tree data
+#' @title Merge fitted height-diameter parameters with tree by tree data. Depricated.
 #' @description Function to merge fitted parameters of Weibull height-diameter equations to tree data returned by \code{mergefp}
 #' @param data Object returned by mergefp
 #' @param wparm Object returned by \code{fit.weib}
