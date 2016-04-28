@@ -64,10 +64,10 @@ lf.error<-lf.agb-obs.agb
 error<-c(wf.error,wfw.error,lf.error)
 names(error)<-c("Weibull","Weibull.weight","Loglog")
 abs.error<-abs(error)
-best.mod<-grep(min(abs.error,na.rm=T),abs.error)
+best.mod<-as.numeric(grep(min(abs.error,na.rm=T),abs.error))
 if(weib.only==TRUE){
 if(!is.na(abs.error[1])|!is.na(abs.error[2])){
-best.mod<-grep(min(abs.error[1:2],na.rm=T),abs.error[1:2])
+best.mod<-as.numeric(grep(min(abs.error[1:2],na.rm=T),abs.error[1:2]))
 }
 }
 result<-as.numeric(c(wf.param,wfw.param,lf.param,best.mod,error/ntrees,ntrees))

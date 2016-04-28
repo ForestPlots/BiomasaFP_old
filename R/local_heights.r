@@ -1,14 +1,17 @@
 #' @title local.heights
 #' @description Wrapper function for estimating heights using local allometric equations.
-#' @param xdataset Object returned by \code{mergefp}.
+#' @param xdataset Object returned by /code{mergefp}.
 #' @param dbh Character giving the name of the column contining the diameter measurements. Defaults to "D4".
-#' @param weib.only Logical. Should the search for the best model be constrained to Weibull models. If TRUE, log-log models are only selected when neither Weibull models converge. Default is FALSE.
+#' @param use.height.constrain Logical. Should height constrain function be used when selecting best model. Defaul is FALSE.
+#' @param max.size max.size argument to /code{height.constrain}.
+#' @param thresh thresh argument to /code{fit.weib.models}.
+#' @param na.too.big na.too.big argumet to /code{height.constrain}.
 #' @return Dataframe with best parameters for height-diameter models for each row in xdataset.
 #' @author Martin Sullivan
 
 #' @export
 
-local.heights<-function(xdataset,dbh="D4"){
+local.heights<-function(xdataset,dbh="D4",use.height.constrain=FALSE,max.size=80,thresh=20,na.too.big=FALSE){
 data<-xdataset
 data$FT<-paste(data$ForestMoistureID,data$ForestEdaphicHeightID,data$ForestElevationHeightID,sep="")
 data$ID.clust<-paste(data$ClusterID,data$FT,sep="_")
@@ -43,10 +46,18 @@ htdata <- htdata[!(htdata$Method==1),]
 htdata$Diameter<-htdata[,dbh]
 
 #Fit h-d models
-plot.fit<-hd.fit(htdata,"Plot")
-clust.fit<-hd.fit(htdata,"Cluster")
-bio.fit<-hd.fit(htdata,"BioR",weib.only=TRUE)
-cont.fit<-hd.fit(htdata,"Continent",weib.only=TRUE)
+plot.fit<-hd.fit(htdata,"Plot",thresh=thresh)
+clust.fit<-hd.fit(htdata,"Cluster",thresh=thresh)
+bio.fit<-hd.fit(htdata,"BioR",weib.only=TRUE,thresh=thresh)
+cont.fit<-hd.fit(htdata,"Continent",weib.only=TRUE,thresh=thresh)
+
+#Constrain by heights
+if(use.height.constrain==TRUE){
+plot.fit<-height.constrain(plot.fit,data,level="Plot",dbh=dbh,max.size=max.size,na.too.big=na.too.big)
+clust.fit<-height.constrain(clust.fit,data,level="Cluster",dbh=dbh,max.size=max.size,na.too.big=na.too.big)
+bio.fit<-height.constrain(bio.fit,data,level="BioR",dbh=dbh,max.size=max.size,na.too.big=na.too.big)
+cont.fit<-height.constrain(cont.fit,data,level="Continent",dbh=dbh,max.size=max.size,na.too.big=na.too.big)
+}
 
 #Match in best parameters
 data$a_Plot<-plot.fit[match(data$PlotID,plot.fit$ID),"Best_a"]
@@ -80,6 +91,6 @@ data$b_Best<-ifelse(!is.na(data$a_Plot),data$b_Plot,
 data$c_Best<-ifelse(!is.na(data$a_Plot),data$c_Plot,
 	ifelse(!is.na(data$a_ClustF),data$c_ClustF,
 		ifelse(!is.na(data$a_BioRF),data$c_BioRF,data$c_ContF)))
-return(data)
+return(list(data,plot.fit,clust.fit,bio.fit,cont.fit))
 }
 
