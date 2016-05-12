@@ -203,7 +203,7 @@ AGBData <- merge(AGBData,parameters,all.x=TRUE)	}															# CHANGED: new l
  	 
          SummaryB <- SummaryB[order(SummaryB$PlotViewID, SummaryB$Census.No, decreasing=FALSE), ] 
  	#Add AGWP per ha 
- 	SummaryB$AGWP.PlotArea<-with(SummaryB,Delta.AGB.PlotArea+AGBRec.PlotArea+Unobs.dead.PlotArea+UnobsGrowth) 						# NOTE: .PlotArea means plotarea weighted so per ha
+ 	SummaryB$AGWP.PlotArea<-with(SummaryB,ifelse(is.na(Delta.AGB.PlotArea),0,Delta.AGB.PlotArea)+ifelse(is.na(AGBRec.PlotArea),0,AGBRec.PlotArea)+ifelse(is.na(Unobs.dead.PlotArea),0,Unobs.dead.PlotArea)+ifelse(is.na(UnobsGrowth),0,UnobsGrowth)) 						# NOTE: .PlotArea means plotarea weighted so per ha
 
  	SummaryB$AGWP.PlotArea.Year<-SummaryB$AGWP.PlotArea/SummaryB$Delta.time 
  	 
