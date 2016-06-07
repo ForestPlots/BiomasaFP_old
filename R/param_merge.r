@@ -1,12 +1,13 @@
-#' @title Merge fitted height-diameter parameters with tree by tree data
+#' @title Merge fitted height-diameter parameters with tree by tree data. Depricated.
 #' @description Function to merge fitted parameters of Weibull height-diameter equations to tree data returned by \code{mergefp}
 #' @param data Object returned by mergefp
-#' @param wparm Object returned by \\coding {fit.weib}
+#' @param wparm Object returned by \code{fit.weib}
+#' @param dbh Name of column containing diameter data. Default is "D4". Used when estimating height.
 #' @author Martin Sullivan, Gabriela Lopez-Gonzalez
 
 #' @export
 
-param.merge<-function(data,wparm){
+param.merge<-function(data,wparm,dbh="D4"){
 
 #CHANGE COLUMN NAMES FOR BACKCOMPATABILITY
 data$EdaphicHeightCode<-data$ForestEdaphicHeightID
@@ -68,6 +69,10 @@ d7<-cbind(d6,matrix(nrow=nrow(d6),ncol=(ncol(dw5)-ncol(d6))))
 names(d7)[(ncol(d6)+1):ncol(d7)]<-names(dw5)[(ncol(d6)+1):ncol(d7)]
 dw.all<-rbind(dw5,d7)
 
+#Make diameter column for best height
+dw.all$Diameter<-dw.all[,dbh]
+
+
 ###
 dw.all$a_Best<-with(dw.all,
 	ifelse(!is.na(a_Plot),a_Plot,
@@ -92,9 +97,14 @@ dw.all$Weib.parm.source<-with(dw.all,
 		ifelse(!is.na(c_ClusterF),"Cluster",
 			ifelse(!is.na(c_BioRF),"BiogR",
 	"Cont"))))
-dw.all$HtEst<-dw.all$a_Best*(1-exp(-dw.all$b_Best*(dw.all$D4/10)^dw.all$c_Best))
-dw.all$HtEst[is.na(dw.all$D4)]<-NA
+dw.all$HtEst<-dw.all$a_Best*(1-exp(-dw.all$b_Best*(dw.all$Diameter/10)^dw.all$c_Best))
+dw.all$HtEst[is.na(dw.all$Diameter)]<-NA
 dw.all$HtEst[dw.all$HtEst==0]<-NA
 
+dw.all$Error<-(dw.all$Height-dw.all$HtEst)^2
+me<-tapply(dw.all$Error,dw.all$PlotViewID,function(x)sqrt(mean(x,na.rm=T)))
+nt<-tapply(dw.all$Height,dw.all$PlotViewID,function(x)length(x[!is.na(x)]))
+dw.all$RMSE<-as.numeric(me[match(dw.all$PlotViewID,names(me))])
+dw.all$Trees.with.height<-as.numeric(nt[match(dw.all$PlotViewID,names(nt))])
 return(dw.all)
 }

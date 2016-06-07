@@ -21,39 +21,77 @@
 #' @export
 #' @author Gabriela Lopez-Gonzalez
 
-AGBChv14 <- function (xdataset, dbh = "D4",height.data=NULL,param.type="Best"){
-        cdf <- xdataset
-        ## Clean file 
-        cdf <- CleaningCensusInfo(xdataset) 
-        # Get Weibull Parameters
-    	if(is.null(height.data)){	
-    		data(WeibullHeightParameters)
-    		WHP <- WeibullHeightParameters
-   		cdf <- merge(cdf, WHP, by = "AllometricRegionID", all.x = TRUE)
-   	 }else{
-		p1<-paste("a",param.type,sep="_")
-		p2<-paste("b",param.type,sep="_")
-		p3<-paste("c",param.type,sep="_")
-		height.data<-height.data[,c("PlotViewID",p1,p2,p3)]
-		height.data<-unique(height.data)
-		names(height.data)<-c("PlotViewID","a_par","b_par","c_par")
-		cdf<-merge(cdf,height.data,by="PlotViewID",all.x=TRUE)
-    	}
-        #Estimate height
-        cdf$HtF <- ifelse(cdf$D1 > 0 | cdf$Alive == 1, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh]/10)^cdf$c_par)), NA)
-        #Add dead and recruits when codes are improved
-        dbh_d <- paste(dbh,"_D", sep="") 
-        cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$Census.No, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh_d]/10)^cdf$c_par)), NA)
+# AGBChv14 <- function (xdataset, dbh = "D4",height.data=NULL,param.type="Best"){
+#        cdf <- xdataset
+#        ## Clean file 
+#        cdf <- CleaningCensusInfo(xdataset) 
+#        # Get Weibull Parameters
+#    	if(is.null(height.data)){	
+#    		data(WeibullHeightParameters)
+#    		WHP <- WeibullHeightParameters
+#   		cdf <- merge(cdf, WHP, by = "AllometricRegionID", all.x = TRUE)
+#   	 }else{
+#		p1<-paste("a",param.type,sep="_")
+#		p2<-paste("b",param.type,sep="_")
+#		p3<-paste("c",param.type,sep="_")
+#		height.data<-height.data[,c("PlotViewID",p1,p2,p3)]
+#		height.data<-unique(height.data)
+#		names(height.data)<-c("PlotViewID","a_par","b_par","c_par")
+#		cdf<-merge(cdf,height.data,by="PlotViewID",all.x=TRUE)
+#   	}
+#       #Estimate height
+#        cdf$HtF <- ifelse(cdf$D1 > 0 | cdf$Alive == 1, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh]/10)^cdf$c_par)), NA)
+#        #Add dead and recruits when codes are improved
+#        dbh_d <- paste(dbh,"_D", sep="") 
+#        cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$Census.No, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh_d]/10)^cdf$c_par)), NA)
+#        
+#        # Calculate AGB by stem Alive type
+#        cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & (cdf$CensusStemDied>cdf$Census.No | is.na(cdf$IsSnapped)), 
+#                             0.0673 *(cdf$WD * (cdf[,dbh]/10)^2* cdf$HtF)^0.976/1000, 
+#                             NA)
+#        #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
+#        #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)
+#        cdf$AGBDead <-ifelse(cdf$CensusStemDied==cdf$Census.No,
+#                             0.0673 *(cdf$WD * (cdf[,dbh_d]/10)^2* cdf$Htd)^0.976/1000, NA)
+#        
+#        cdf  
         
-        # Calculate AGB by stem Alive type
-        cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & (cdf$CensusStemDied>cdf$Census.No | is.na(cdf$IsSnapped)), 
-                             0.0673 *(cdf$WD * (cdf[,dbh]/10)^2* cdf$HtF)^0.976/1000, 
-                             NA)
-        #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
-        #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)
-        cdf$AGBDead <-ifelse(cdf$CensusStemDied==cdf$Census.No,
-                             0.0673 *(cdf$WD * (cdf[,dbh_d]/10)^2* cdf$Htd)^0.976/1000, NA)
-        
-        cdf  
-        
-}
+#}
+
+AGBChv14 <- function (xdataset, dbh = "D4",height.data=NULL,param.type="Best"){ 
+         cdf <- xdataset 
+         ## Clean file  
+         cdf <- CleaningCensusInfo(xdataset)  
+         # Get Weibull Parameters 
+     	if(is.null(height.data)){	 
+     		data(WeibullHeightParameters) 
+     		WHP <- WeibullHeightParameters 
+    		cdf <- merge(cdf, WHP, by = "AllometricRegionID", all.x = TRUE) 
+    	 }else{ 
+ 		p1<-paste("a",param.type,sep="_") 
+ 		p2<-paste("b",param.type,sep="_") 
+ 		p3<-paste("c",param.type,sep="_") 
+ 		height.data<-height.data[,c("TreeID",p1,p2,p3)] 						# WH: changed PlotViewID into TreeID
+ 		height.data<-unique(height.data) 
+ 		names(height.data)<-c("TreeID","a_par","b_par","c_par") 					# WH: changed PlotViewID into TreeID
+ 		cdf<-merge(cdf,height.data,by="TreeID",all.x=TRUE) 					# WH: changed PlotViewID into TreeID
+     	} 
+         #Estimate height 
+         cdf$HtF <- ifelse(cdf$D1 > 0 | cdf$Alive == 1, height.mod(cdf[,dbh],cdf$a_par,cdf$b_par,cdf$c_par), NA) 
+         #Add dead and recruits when codes are improved 
+         dbh_d <- paste(dbh,"_D", sep="")  
+         cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$Census.No, height.mod(cdf[,dbh_d],cdf$a_par,cdf$b_par,cdf$c_par), NA) 
+          
+         # Calculate AGB by stem Alive type 
+         cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & cdf$CensusStemDied>cdf$Census.No,  
+                              0.0673 *(cdf$WD * (cdf[,dbh]/10)^2* cdf$HtF)^0.976/1000,  
+                              NA) 
+         #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA) 
+         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA) 
+         cdf$AGBDead <-ifelse(cdf$CensusStemDied==cdf$Census.No, 
+                              0.0673 *(cdf$WD * (cdf[,dbh_d]/10)^2* cdf$Htd)^0.976/1000, NA) 
+          
+         cdf   
+          
+ } 
+

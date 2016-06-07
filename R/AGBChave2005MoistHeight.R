@@ -34,10 +34,10 @@ AGBChv05MH <- function (xdataset, dbh = "D4",height.data=NULL,param.type="Best")
 		cdf<-merge(cdf,height.data,by="PlotViewID",all.x=TRUE)
   	  }	
         #Estimate height
-        cdf$HtF <- ifelse(cdf$D1 > 0 | cdf$Alive == 1, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh]/10)^cdf$c_par)), NA)
+        cdf$HtF <- ifelse(cdf$D1 > 0 | cdf$Alive == 1, height.mod(cdf[,dbh],cdf$a_par,cdf$b_par,cdf$c_par), NA)
         #Add dead and recruits when codes are improved
          dbh_d <- paste(dbh,"_D", sep="") 
-         cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$Census.No, cdf$a_par*(1-exp(-cdf$b_par*(cdf[,dbh_d]/10)^cdf$c_par)), NA)
+         cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$Census.No, height.mod(cdf[,dbh_d],cdf$a_par,cdf$b_par,cdf$c_par), NA)
        
         # Calculate AGB by stem Alive type
         cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & (cdf$CensusStemDied>cdf$Census.No | is.na(cdf$IsSnapped)), (0.0509*cdf$WD * ((cdf[,dbh]/10)^2)* cdf$HtF)/1000, NA)
