@@ -404,5 +404,6 @@ SummaryAGWP_OLD <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.
                            "AGWPsurv.ha","SurvivingStems.ha","UnobsAGWPmort.ha","Mean.WD","Recruitment.stem.year","Mortality.stem.year","UnobsAGWPrec.ha","UnobsRecruits.ha","CensusInterval","AGWP.ha","AGWP.ha.year")
         SummaryB
         
-} 
- 
+
+}
+
