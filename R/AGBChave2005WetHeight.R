@@ -9,7 +9,7 @@
 #' @param xdataset a dataset for estimating biomass
 #' @param dbh a diameter (in mm). 
 #' @param height.data Object returned by param.merge. If NULL (default), then regional height-diameter equations are used.
-#' @param param.type Local height diameter to use. One of "Best" (defualt), "BioRF","ClusterF" ... NEED TO DECIDE WHICH OF THESE TO RETURN
+#' @param param.type Local height diameter to use. One of Best (defualt), BioRF,ClusterF ... NEED TO DECIDE WHICH OF THESE TO RETURN
 #' 
 #' @export
 #' @author Gabriela Lopez-Gonzalez
@@ -39,13 +39,17 @@ AGBChv05WH <- function (xdataset, dbh = "D4",height.data=NULL,param.type="Best")
         cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$Census.No, height.mod(cdf[,dbh_d],cdf$a_par,cdf$b_par,cdf$c_par), NA)
         
         # Calculate AGB by stem Alive type
-        cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & cdf$CensusStemDied>cdf$Census.No, 
+        cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & (cdf$CensusStemDied>cdf$Census.No | is.na(cdf$IsSnapped)), 
                              0.0776 *(cdf$WD * (cdf[,dbh]/10)^2* cdf$HtF)^0.940/1000, 
                              NA)
         cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)
+        #cdf$AGBDead <-ifelse(cdf$CensusStemDied==cdf$Census.No,
+                           #  0.0776 *(cdf$WD * (cdf[,dbh_d]/10)^2* cdf$HtFd)^0.940/1000 ()
+                            # , NA)
+        
         cdf$AGBDead <-ifelse(cdf$CensusStemDied==cdf$Census.No,
-                             0.0776 *(cdf$WD * (cdf[,dbh_d]/10)^2* cdf$HtFd)^0.940/1000
+                              0.0776 *(cdf$WD * (cdf[,dbh_d]/10)^2* cdf$HtFd)^0.940/1000 
                              , NA)
         
         cdf  

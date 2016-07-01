@@ -1,4 +1,4 @@
-﻿
+
 #' @title Function for reading and merging data downloaded from ForestPlots.net
 #' @description Function for reading and merging the 3 datasets needed for estimating biomass: Census Data (a), 
 #' Metadata (b), wood density from each individual tree (c). The tree datasets can be donwloaded from ForestPlots.net.
@@ -57,6 +57,7 @@ mergefp <- function (a,b,d) {
         RNAS$GenusID <- as.numeric(RNAS$GenusID)
         RNAS$SpeciesID <- as.numeric(RNAS$SpeciesID)
         RNAS$D1<- as.numeric(gsub("=","",RNAS$D1))
+        RNAS$DPOMtMinus1<- as.numeric(gsub("=","",RNAS$DPOMtMinus1))
         RNAS$D2<- as.numeric(gsub("=","",RNAS$D2))
         RNAS$D3<- as.numeric(gsub("=","",RNAS$D3))
         RNAS$D4<- as.numeric(gsub("=","",RNAS$D4))
@@ -76,7 +77,7 @@ mergefp <- function (a,b,d) {
         RNASu <- RNAS[,c('PlotID','Plot.Code','Country','Census.Mean.Date',
                          'Census.No','PlotViewID','TreeID','FamilyAPGID',
                          'Family','GenusID','Genus','SpeciesID','Species',
-                         'D1','D2','D3','D4','POM','F1','F2',
+                         'D1','DPOMtMinus1','D2','D3','D4','POM','F1','F2',
                          'F3','F4','Height','F5', 'CI','LI'
         )]
         #extract unique elements, Unique dataset for census data
@@ -138,7 +139,7 @@ mergefp <- function (a,b,d) {
         datasetc <- datasetb[,c('Continent', 'Country', 'PlotID', 'PlotCode'
                                 ,'PlotViewID','LatitudeDecimal','LongitudeDecimal','Altitude','PlotArea',
                                 'TreeID','FamilyAPGID','Family','GenusID','Genus','SpeciesID','Species', 'Census.No', 'Census.Mean.Date',
-                                'D1','D2','D3','D4','POM','F1','F2','F3','F4','Height','F5','LI','CI','WD',
+                                'D1','DPOMtMinus1','D2','D3','D4','POM','F1','F2','F3','F4','Height','F5','LI','CI','WD',
                                 'AllometricRegionID',
                                 'ClusterID', 
                                 'ForestMoistureID','ForestEdaphicID',
@@ -199,6 +200,7 @@ CleaningCensusInfo <- function (dfmerged) {
                 Clean$D2_D <- NA
                 Clean$D3_D <- NA
                 Clean$D4_D <- NA
+                Clean$IsSnapped <-NA## just added GL
                 Clean
         }
         
@@ -245,10 +247,11 @@ CleaningCensusInfo <- function (dfmerged) {
                 # Changed this statement to display the census when the tree died in each line, as then it can be used for ifelse estatement of AGB of individuals
                 CleanA$CensusStemDied <- CleanA$CensusNoDead
 		#Change no data value for CensusStemDied to 9999 - this means that trees that have not yet died with have CensusStemDied>CensusNo
-		CleanA$CensusStemDied[is.na(CleanA$CensusStemDied)]<-9999  
-		CleanA$CensusNoDead[is.na(CleanA$CensusNoDead)]<-9999                
-		#Trees that were never snapped are NA for IsSnapped - correct by changing to 0
-		CleanA$IsSnapped[is.na(CleanA$IsSnapped)]<-0
+                #GL: Removed this statment as somehow it was breaking the code
+		#CleanA$CensusStemDied[is.na(CleanA$CensusStemDied)]<-9999  
+		#CleanA$CensusNoDead[is.na(CleanA$CensusNoDead)]<-9999                
+		#Trees that were never snapped are NA for IsSnapped - correct by changing to 0. GL: reverted to old statement as all AGB functions use is.NA snapped
+		#CleanA$IsSnapped[is.na(CleanA$IsSnapped)]<-0
                 CleanA$Dead <- ifelse(CleanA$F1==0 & CleanA$CensusNoDead==CleanA$Census.No,1, 
                                       ifelse (CleanA$CensusNoDead>CleanA$Census.No,0, NA))
                 CleanA$D1_D <- ifelse(CleanA$CensusNoDead==CleanA$Census.No,CleanA$D1_D, NA)
@@ -258,13 +261,14 @@ CleaningCensusInfo <- function (dfmerged) {
                 
                 # Alive status is corrected for trees that are back to live
                 
-                CleanA$Alive <- ifelse(CleanA$CensusNoDead>CleanA$Census.No & CleanA$IsSnapped==0,1,
-                                      ifelse(CleanA$CensusNoDead>CleanA$Census.No & CleanA$IsSnapped==1,1,
-                                        ifelse(CleanA$CensusNoDead==CleanA$Census.No & CleanA$IsSnapped==0,0,
-                                               ifelse(CleanA$CensusNoDead==CleanA$Census.No & CleanA$IsSnapped==1,1, 
-                                                 ifelse(CleanA$CensusNoDead<CleanA$Census.No & CleanA$IsSnapped==1 & CleanA$F2==1, 1,
-                                                        ifelse(CleanA$CensusNoDead<CleanA$Census.No & CleanA$IsSnapped==1 & CleanA$F1==0,0,NA
-                                                        ) )))))
+                CleanA$Alive <- ifelse(CleanA$F2==1 & is.na(CleanA$IsSnapped),1, 
+                                        ifelse(CleanA$CensusNoDead>CleanA$Census.No  & CleanA$IsSnapped==0,1,
+                                                ifelse(CleanA$CensusNoDead>CleanA$Census.No & CleanA$IsSnapped==1,1,
+                                                        ifelse(CleanA$CensusNoDead==CleanA$Census.No & CleanA$IsSnapped==0,0,
+                                                                ifelse(CleanA$CensusNoDead==CleanA$Census.No & CleanA$IsSnapped==1,1, 
+                                                                        ifelse(CleanA$CensusNoDead<CleanA$Census.No & CleanA$IsSnapped==1 & CleanA$F2==1, 1,
+                                                                                ifelse(CleanA$CensusNoDead<CleanA$Census.No & CleanA$IsSnapped==1 & CleanA$F1==0,0,NA
+                                                                                )))))))
                                       
                                        
                 
@@ -274,7 +278,7 @@ CleaningCensusInfo <- function (dfmerged) {
                                       'TreeID',	'FamilyAPGID',	'Family',	
                                       'GenusID', 'Genus', 'SpeciesID',	'Species',	
                                       'Census.No', 'Census.Mean.Date',	
-                                      'D1', 'D2', 'D3',	'D4', 'POM', 'F1', 'F2',
+                                      'D1', 'DPOMtMinus1', 'D2', 'D3',	'D4', 'POM', 'F1', 'F2',
                                       'F3', 'F4', 'Height', 'F5', 'LI',	'CI',
                                       'WD', 'AllometricRegionID', 'ClusterID',
                                       'ForestMoistureID', 'ForestEdaphicID',
@@ -283,7 +287,7 @@ CleaningCensusInfo <- function (dfmerged) {
                                       'Monocot', 'PomChange',  'Alive','Snapped' ,'Recruit','CensusStemDied','Dead','D1_D','D2_D','D3_D','D4_D','IsSnapped'
                 )]
                 # Discuss if this version should be implemented with all the subplot and t1 information
-                #Clean <- CleanA[ , c('TreeID','PlotViewID','ContinentName','CountryID','CountryName','AllometricRegionID','PlotID','PlotCode','PlotViewPlotCensusID','CensusNo','MeanDecimalDate', 'Subplot_Standard','x_standard','y_standard','SubPlotT1','SubPlotT2','x','y','FamilyAPGID','FamilyAPGName','GenusID','GenusName','SpeciesID','FullSpeciesName',        'TagNumber','DBH1','DBH2','DBH3','DBH4','POM','Flag1','Flag2','Flag3','Flag4','CI','LI','Alive','NewRecruit','POMChange','AliveNormal',  'MultipleStem',        'Snapped','WD','CensusStemDied','Dead','DBH1_D','DBH2_D','DBH3_D','DBH4_D','Altitude','LatitudeDecimal', 'LongitudeDecimal','PlotArea')]
+                #Clean <- CleanA[ , c('TreeID','PlotViewID','ContinentName','CountryID','CountryName','AllometricRegionID','PlotID','PlotCode','PlotViewPlotCensusID','CensusNo','MeanDecimalDate', 'Subplot_Standard','x_standard','y_standard','SubPlotT1','SubPlotT2','x','y','FamilyAPGID','FamilyAPGName','GenusID','GenusName','SpeciesID','FullSpeciesName',        'TagNumber','DBH1','DPOMtMinus1',DBH2','DBH3','DBH4','POM','Flag1','Flag2','Flag3','Flag4','CI','LI','Alive','NewRecruit','POMChange','AliveNormal',  'MultipleStem',        'Snapped','WD','CensusStemDied','Dead','DBH1_D','DBH2_D','DBH3_D','DBH4_D','Altitude','LatitudeDecimal', 'LongitudeDecimal','PlotArea')]
                 
                 Clean
         }

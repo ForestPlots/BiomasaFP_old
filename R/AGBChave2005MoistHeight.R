@@ -3,7 +3,7 @@
 #' @param xdataset a dataset for estimating biomass
 #' @param dbh a diameter (in mm).
 #' @param height.data Object returned by param.merge. If NULL (default), then regional height-diameter equations are used.
-#' @param param.type ocal height diameter to use. One of "Best" (defualt), "BioRF","ClusterF" ... NEED TO DECIDE WHICH OF THESE TO RETURN
+#' @param param.type local height diameter to use. One of Best (defualt), BioRF,Cluster ... NEED TO DECIDE WHICH OF THESE TO RETURN
 #' @references Chave J, Andalo C, Brown S, et al. 2005. Tree allometry and improved estimation of carbon stocks and balance in tropical forests. Oecologia 145 (1):87-99. doi:10.1007/s00442-005-0100-x.
 #' 
 #' Feldpausch TR, Banin L, Phillips OL, Baker TR, Lewis SL et al. 2011. Height-diameter allometry of tropical forest trees. Biogeosciences 8 (5):1081-1106. doi:10.5194/bg-8-1081-2011.
@@ -15,7 +15,7 @@
 
 #' @export
 
-AGBChv05MH <- function (xdataset, dbh = "D4",height.data=NULL,param.type=Best){
+AGBChv05MH <- function (xdataset, dbh = "D4",height.data=NULL,param.type="Best"){
         cdf <- xdataset
         ## Clean file 
         cdf <- CleaningCensusInfo(xdataset) 
@@ -40,7 +40,7 @@ AGBChv05MH <- function (xdataset, dbh = "D4",height.data=NULL,param.type=Best){
          cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$Census.No, height.mod(cdf[,dbh_d],cdf$a_par,cdf$b_par,cdf$c_par), NA)
        
         # Calculate AGB by stem Alive type
-        cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & cdf$CensusStemDied>cdf$Census.No, (0.0509*cdf$WD * ((cdf[,dbh]/10)^2)* cdf$HtF)/1000, NA)
+        cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & (cdf$CensusStemDied>cdf$Census.No | is.na(cdf$IsSnapped)), (0.0509*cdf$WD * ((cdf[,dbh]/10)^2)* cdf$HtF)/1000, NA)
         #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA)
         #cdf$AGBRec <- ifelse(cdf$NewRecruit == 1, cdf$AGBind, NA)# maybe no need to estimate this by 
         cdf$AGBDead <-ifelse(cdf$CensusStemDied==cdf$Census.No,(0.0509*cdf$WD * ((cdf[,dbh_d]/10)^2)* cdf$Htd)/1000, NA)

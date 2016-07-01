@@ -15,7 +15,7 @@ SizeClassGrowth<-function(xdataset, method="median",dbh ="D4"){
 	AGBData$Delta.DBH<-AGBData[,dbh]-AGBData$DBH.prev
 	AGBData$Census.prev<-AGBData[match(paste(AGBData$TreeID,AGBData$Census.No-1),paste(AGBData$TreeID,AGBData$Census.No)),"Census.Mean.Date"]
 	AGBData$Delta.time<-AGBData$Census.Mean.Date-AGBData$Census.prev
-   	Class1<-AGBData[AGBData[,dbh]>=100 & AGBData[,dbh]<200,]
+   	Class1<-AGBData[AGBData[,dbh]>=50 & AGBData[,dbh]<200,]
 	Class2<-AGBData[AGBData[,dbh]>=200 & AGBData[,dbh]<400,]
 	Class3<-AGBData[AGBData[,dbh]>=400,]
 	if(method=="median"){
