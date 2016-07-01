@@ -21,6 +21,7 @@
 #' @export
 #' @author Gabriela Lopez-Gonzalez
 
+
 # AGBChv14 <- function (xdataset, dbh = "D4",height.data=NULL,param.type="Best"){
 #        cdf <- xdataset
 #        ## Clean file 
@@ -83,7 +84,7 @@ AGBChv14 <- function (xdataset, dbh = "D4",height.data=NULL,param.type="Best"){
          cdf$Htd <- ifelse(cdf$CensusStemDied==cdf$Census.No, height.mod(cdf[,dbh_d],cdf$a_par,cdf$b_par,cdf$c_par), NA) 
           
          # Calculate AGB by stem Alive type 
-         cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & cdf$CensusStemDied>cdf$Census.No,  
+         cdf$AGBind <- ifelse(cdf$D1>0 & cdf$Alive == 1 & (cdf$CensusStemDied>cdf$Census.No | is.na(cdf$IsSnapped)),  
                               0.0673 *(cdf$WD * (cdf[,dbh]/10)^2* cdf$HtF)^0.976/1000,  
                               NA) 
          #cdf$AGBAl <-  ifelse(cdf$Alive == 1, cdf$AGBind, NA) 
