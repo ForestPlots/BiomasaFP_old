@@ -6,15 +6,20 @@
 #' @param dbh Name of column containing diameter measurements. Default is "D4".
 #' @param max.size Maximum tree height. If all models predict the height of the largest tree in the plot to be below this, then the model with the lowest AGB prediction error will be used. Otherwise models predicting heights above this will be excluded from selection. If all models predict heights above this, then the model giving the lowest maximum height will be selected. 
 #' @param na.too.big Logical. Should parameters be set to NA if all models exceed height treshold. Default is FALSE.
+#' @param forest.type Logical. Should ID include forest type.
 #' @return Dataframe with components returned by /code{hd.fit}, but with addtional columns giving the maximum diameter of the largest tree in the plot, the predicted maximum height using each model, and a column indicating whether the choice of best model was modified (0 = no change, 1 = previous best model excluded due to exceeding threshold, 2 = all models exceeded height threshold).
 #' @author Martin Sullivan
 
 #' @export
 
-height.constrain<-function(fit,data,level,dbh="D4",max.size=80,na.too.big=FALSE){
+height.constrain<-function(fit,data,level,dbh="D4",max.size=80,na.too.big=FALSE,forest.type=TRUE){
 data$level<-level
 data$FT<-paste(data$ForestMoistureID,data$ForestEdaphicHeightID,data$ForestElevationHeightID,sep="")
+if(forest.type==TRUE){
 data$ID<-ifelse(data$level=="Plot",data$PlotID,ifelse(data$level=="Cluster",paste(data$ClusterID,data$FT,sep="_"),ifelse(data$level=="BioR",paste(data$BiogeographicalRegionID,data$FT,sep="_"),paste(data$Continent,data$FT,sep="_"))))
+}else{
+data$ID<-ifelse(data$level=="Plot",data$PlotID,ifelse(data$level=="Cluster",data$ClusterID,ifelse(data$level=="BioR",data$BiogeographicalRegionID,data$Continent)))
+}
 max.diam<-tapply(data[,dbh],data$ID,max,na.rm=T)
 fit$Max.diameter<-as.numeric(max.diam[match(fit$ID,names(max.diam))])
 fit$Max.best<-with(fit,height.mod(Max.diameter,Best_a,Best_b,Best_c))
