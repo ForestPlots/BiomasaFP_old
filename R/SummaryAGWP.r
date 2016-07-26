@@ -60,7 +60,7 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
  	  AGB.surv<-aggregate(Delta.AGB/PlotArea ~ PlotViewID + Census.No,  data = AGBData[AGBData$Survive2==1,], FUN=sum ) 
   	  IndSurv<-aggregate(Survive/PlotArea ~ PlotViewID + Census.No,  data = AGBData, FUN=sum ) 
  	  #Calculate mean WD per census 
- 	  WD<-aggregate(WD ~ PlotViewID + Census.No,  data = AGBData, FUN=function(x)mean(x,na.rm=T)) 
+ 	  WD<-aggregate(WD ~ PlotViewID + Census.No,  data = AGBData[AGBData$Alive==1,], FUN=function(x)mean(x,na.rm=T)) 
  
  
  	  # Find Recruits 
@@ -87,12 +87,12 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
  	  # Unobserved growth of dead trees 
  	  growth.rate<-SizeClassGrowth(xdataset,dbh=dbh) 
  	  dead2<-merge(DeadTrees,growth.rate,by="PlotViewID",all.x=T) 
-         dead2$DBH.death<-ifelse(dead2[,paste(dbh,"_D",sep="")]<200,dead2$Delta.time*dead2$Class1, 
- 		ifelse(dead2[,paste(dbh,"_D",sep="")]<400,dead2$Delta.time*dead2$Class2, 
- 			dead2$Delta.time*dead2$Class3)) 
+         dead2$DBH.death<-ifelse(dead2[,paste(dbh,"_D",sep="")]<200,(dead2$Delta.time/2)*dead2$Class1, 
+ 		ifelse(dead2[,paste(dbh,"_D",sep="")]<400,(dead2$Delta.time/2)*dead2$Class2, 
+ 			(dead2$Delta.time/2)*dead2$Class3)) 
  	  dead2$DBH.death<-dead2$DBH.death+dead2[,paste(dbh,"_D",sep="")] 
  	  #Height at death 
- 	  dead2$Height.dead<-height.mod(dead2[,paste(dbh,"_D",sep="")],dead2$a_par,dead2$b_par,dead2$c_par) 
+ 	  dead2$Height.dead<-height.mod(dead2$DBH.death,dead2$a_par,dead2$b_par,dead2$c_par) 
  	  #AGB at death 
  	  if(Chv14==F){ 
  			dead2$AGB.death2<-(0.0509*dead2$WD * ((dead2$DBH.death/10)^2)* dead2$Height.dead)/1000 
