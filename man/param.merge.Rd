@@ -2,14 +2,16 @@
 % Please edit documentation in R/param_merge.r
 \name{param.merge}
 \alias{param.merge}
-\title{Merge fitted height-diameter parameters with tree by tree data}
+\title{Merge fitted height-diameter parameters with tree by tree data. Depricated.}
 \usage{
-param.merge(data, wparm)
+param.merge(data, wparm, dbh = "D4")
 }
 \arguments{
 \item{data}{Object returned by mergefp}
 
-\item{wparm}{Object returned by \\coding {fit.weib}}
+\item{wparm}{Object returned by \code{fit.weib}}
+
+\item{dbh}{Name of column containing diameter data. Default is "D4". Used when estimating height.}
 }
 \description{
 Function to merge fitted parameters of Weibull height-diameter equations to tree data returned by \code{mergefp}

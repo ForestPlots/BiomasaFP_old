@@ -4,10 +4,12 @@
 \alias{fit.weib}
 \title{Function to fit height-diamter models}
 \usage{
-fit.weib(data, return.mods = FALSE)
+fit.weib(data, dbh = "D4", return.mods = FALSE)
 }
 \arguments{
 \item{data}{Object returned by mergefp}
+
+\item{dbh}{Name of column containing diameter data to be used to train models. Default is "D4".}
 
 \item{return.mods}{Logical. If TRUE, full model fits are returned. Otherwise (default) only the fitted coefficents are returned.}
 }
@@ -15,7 +17,7 @@ fit.weib(data, return.mods = FALSE)
 A data frame with PlotViewID and fitted parameters of Weibull models at each level.
 }
 \description{
-Function for fitting height-diameter Weibull models by non-linear least squares
+Function for fitting height-diameter Weibull models by non-linear least squares. Depricated.
 }
 \author{
 Martin Sullivan, Gabriela Lopez-Gonzalez
