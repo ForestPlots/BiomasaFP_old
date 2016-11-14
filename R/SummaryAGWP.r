@@ -52,7 +52,7 @@ SummaryAGWP <- function (xdataset, AGBEquation, dbh ="D4",rec.meth=0,height.data
  
 
  	  #Calculate growth of surviving trees 
- 	  AGBData$AGB.Prev<-AGBData[match(paste(AGBData$TreeID,AGBData$Census.No-1),paste(AGBData$TreeID,AGBData$Census.No)),"AGBind"] 
+ 	  AGBData$AGB.Prev<-AGBData[match(paste(AGBData$TreeID,AGBData$PlotViewID,AGBData$Census.No-1),paste(AGBData$TreeID,AGBData$PlotViewID,AGBData$Census.No)),"AGBind"] 
  	  AGBData$Delta.AGB<-AGBData$AGBind-AGBData$AGB.Prev 
  	  AGBData$Survive2<-ifelse(AGBData$Census.No>1 & AGBData$Recruit==0 & AGBData$Alive==1 & AGBData$Snapped==0,1,0) 
  	  #Includes snapped trees - for stem dynamics 
@@ -151,12 +151,12 @@ AGBData <- merge(AGBData,parameters,all.x=TRUE)	}															# CHANGED: new l
  	interval<-tmp$Delta.time 
  	tmp$rec.rate<-recruits/stems/interval 
  	tmp$mort.rate<-death/stems/interval 
- 	tmp$rec.rate <- replace(tmp$rec.rate,is.na(tmp$rec.rate),0)													# CHANGE: added, otherwise function doesn't work as crashes on plotviews with 0 recruitment 
- 	tmp$mort.rate <- replace(tmp$mort.rate,is.na(tmp$mort.rate),0)	 
+ 	#tmp$rec.rate <- replace(tmp$rec.rate,is.na(tmp$rec.rate),0)													# CHANGE: added, otherwise function doesn't work as crashes on plotviews with 0 recruitment 
+ 	#tmp$mort.rate <- replace(tmp$mort.rate,is.na(tmp$mort.rate),0)	 
  	#Get time weighted mean of rec and mort rates for each plot 
  	a<-split(tmp,f=tmp$PlotViewID) 
- 	rec1<-unlist(lapply(a,function(x)ifelse(nrow(x)>1,as.numeric(lm(x$rec.rate~1,weights=x$Delta.time)[1]),NA))) 
- 	mort1<-unlist(lapply(a,function(x)ifelse(nrow(x)>1,as.numeric(lm(x$mort.rate~1,weights=x$Delta.time)[1]),NA))) 
+ 	rec1<-unlist(lapply(a,function(x)weighted.mean(x$rec.rate,x$Delta.time,na.rm=T))) 
+ 	mort1<-unlist(lapply(a,function(x)weighted.mean(x$mort.rate,x$Delta.time,na.rm=T)))
  	rec.means<-data.frame("PlotViewID"=names(rec1),"Rec.mean"=as.numeric(rec1),stringsAsFactors=F) 
  	mort.means<-data.frame("PlotViewID"=names(mort1),"Mort.mean"=as.numeric(mort1),stringsAsFactors=F) 
 	plot.means<-merge(rec.means,mort.means,by="PlotViewID",all.x=T) 
