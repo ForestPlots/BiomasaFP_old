@@ -5,7 +5,7 @@
 \title{SummaryAGWP}
 \usage{
 SummaryAGWP(xdataset, AGBEquation, dbh = "D4", rec.meth = 0,
-  height.data = NULL, param.type = "Best")
+  height.data = NULL, param.type = "Best", palm.eq = TRUE)
 }
 \arguments{
 \item{xdataset}{Object returned by \code{mergefp}.}
@@ -16,9 +16,11 @@ SummaryAGWP(xdataset, AGBEquation, dbh = "D4", rec.meth = 0,
 
 \item{rec.meth}{Method used to estimate AGWP of recruits. If 0 (default), estimates growth from starting diameter of 0mm. If another value is provided, then growth is estimated from a starting diameter of 100mm.}
 
-\item{height.data}{Object returned by \code{param.merge}. Used to supply parameters of local allometric equations. If NULL (default), regional height diameter equations are used.}
+\item{height.data}{Object returned by \code{local.heights}. Used to supply parameters of local allometric equations. If NULL (default), regional height diameter equations are used.}
 
-\item{param.type}{Local height diameter to use. One of Best (defualt), BioRF,ClusterF ... NEED TO DECIDE WHICH OF THESE TO RETURN. Ignored if \code{height.data=NULL}.}
+\item{param.type}{Local height diameter to use. One of "Best" (defualt), "ClusterF","BioRF" or "ContinentF". Ignored if \code{height.data=NULL}.}
+
+\item{palm.eq}{Logical. If TRUE the family level diameter based equation from Goodman et al 2013 is used to estimate AGB of monocots. Otherwise AGB of monocots is estimated using the allometric equation supplied to \code{AGBEquation}.}
 }
 \value{
 A data frame with PlotViewID, CensusNo, and observed and unobserved elements of AGWP, stem dynamics and AGB mortality.
